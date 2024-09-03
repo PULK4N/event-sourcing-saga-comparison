@@ -19,4 +19,4 @@ COPY --from=build /app/out .
 EXPOSE 5000
 
 # Define the entry point for the container
-ENTRYPOINT ["dotnet", "SagaOrchestrator.dll"]
+ENTRYPOINT ["dotnet", "AccountManager.dll"]
