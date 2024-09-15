@@ -83,7 +83,7 @@ services:
     depends_on:
       - broker 
 
-  account-service:
+  account:
     build:
       context: ./AccountManager
       dockerfile: Dockerfile
@@ -94,7 +94,7 @@ services:
     depends_on:
       - broker 
 
-  transaction-service:
+  transaction:
     build:
       context: ./TransactionManager
       dockerfile: Dockerfile
@@ -105,7 +105,7 @@ services:
     depends_on:
       - broker 
 
-  notification-service:
+  notification:
     build:
       context: ./NotificationManager
       dockerfile: Dockerfile
@@ -116,7 +116,7 @@ services:
     depends_on:
       - broker 
 
-  audit-service:
+  audit:
     build:
       context: ./AuditManager
       dockerfile: Dockerfile
