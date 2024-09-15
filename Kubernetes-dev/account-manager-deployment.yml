@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-manager
+  namespace: banking-app-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: account-manager
+  template:
+    metadata:
+      labels:
+        app: account-manager
+    spec:
+      containers:
+        - name: account-manager
+          image: account:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: KAFKA_BROKER
+              value: broker:9092
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: account-manager
+  namespace: banking-app-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: account-manager
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
