@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: transaction-manager
+  namespace: banking-app-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: transaction-manager
+  template:
+    metadata:
+      labels:
+        app: transaction-manager
+    spec:
+      containers:
+        - name: transaction-manager
+          image: transaction-manager:latest
+          ports:
+            - containerPort: 5000
+          env:
+            - name: KAFKA_BROKER
+              value: broker:9092
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: transaction-manager
+  namespace: banking-app-dev
+spec:
+  type: ClusterIP
+  selector:
+    app: transaction-manager
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
