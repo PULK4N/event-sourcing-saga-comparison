@@ -1,0 +1,97 @@
+name: money-transition-state-machine
+
+# What we want is to have a transaction that moves from state to state.
+# Let's keep it simple, but what we need to ensure is that:
+# We can have multiple transactions
+# - A transaction starts executing from the initial state
+# - The transaction executes steps
+# - The steps can: succeed, time out, or fail
+
+steps:
+  - step_name: "INIT"
+    service: "user-service"
+    description: "Initialize the payment process"
+    data_required:
+      - user_id
+      - payment_method
+    transitions:
+      success: "VALIDATE_PAYMENT"
+      failure: "FAILED"
+      timeout: "TIMED_OUT"
+    timeout: 30s
+    retries: 3
+
+  - step_name: "VALIDATE_PAYMENT"
+    service: "payment-service"
+    description: "Validate payment information"
+    data_required:
+      - payment_method
+    transitions:
+      success: "DEDUCT_AMOUNT"
+      failure: "FAILED"
+      timeout: "TIMED_OUT"
+    timeout: 15s
+    retries: 2
+
+  - step_name: "DEDUCT_AMOUNT"
+    service: "bank-service"
+    description: "Deduct the amount from user's bank"
+    data_required:
+      - bank_account
+      - amount
+    transitions:
+      success: "CONFIRM_PAYMENT"
+      failure: "FAILED"
+      timeout: "TIMED_OUT"
+    timeout: 20s
+    retries: 1
+
+  - step_name: "CONFIRM_PAYMENT"
+    service: "notification-service"
+    description: "Send payment confirmation"
+    data_required:
+      - transaction_id
+      - user_id
+    transitions:
+      success: "COMPLETED"
+      failure: "FAILED"
+      timeout: "TIMED_OUT"
+    timeout: 10s
+    retries: 1
+
+  - step_name: "FAILED"
+    service: "logging-service"
+    description: "Log failure details"
+    data_required:
+      - error_message
+    transitions:
+      success: "TERMINATED"
+    timeout: 5s
+    retries: 0
+
+  - step_name: "TIMED_OUT"
+    service: "timeout-handler-service"
+    description: "Handle transaction timeout"
+    data_required: []
+    transitions:
+      success: "FAILED"
+    timeout: 5s
+    retries: 0
+
+  - step_name: "COMPLETED"
+    service: "completion-handler-service"
+    description: "Finalize and log completion of transaction"
+    data_required:
+      - transaction_id
+    transitions: {}
+    timeout: 5s
+    retries: 0
+
+  - step_name: "TERMINATED"
+    service: "termination-service"
+    description: "End the transaction flow"
+    data_required: []
+    transitions: {}
+    timeout: 5s
+    retries: 0
+
