@@ -42,8 +42,8 @@ spec:
               value: "/kafka-logs"
             - name: JMX_PORT
               value: "9999"
-            - name: TEST
-              value: test
+            - name: KAFKA_CREATE_TOPICS
+              value: "saga-transaction-start:1:1,account-debit-request:1:1,account-debit-response:1:1,account-credit-request:1:1,account-credit-response:1:1,transaction-complete:1:1,transaction-compensate:1:1,notification-events:1:1,notification-events:1:1,testSendingDataFromSaga:1:1"
           volumeMounts:
             - name: logs
               mountPath: /kafka-logs

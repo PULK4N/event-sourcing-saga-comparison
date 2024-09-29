@@ -2,13 +2,13 @@ using Microsoft.Extensions.Configuration;
 
 namespace SagaOrchestrator
 {
-  public class TransactionConfigurationProvider
-  {
-        private readonly IConfiguration configuration;
+    public class TransactionConfigurationProvider
+    {
+        private readonly IConfiguration _configuration;
 
         public TransactionConfigurationProvider(IConfiguration configuration)
         {
-            configuration = configuration;
+            _configuration = configuration;
         }
-  }
+    }
 }
