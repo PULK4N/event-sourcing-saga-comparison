@@ -1,24 +1,13 @@
-using Newtonsoft.Json.Linq;
-
 namespace SagaOrchestrator
 {
-    public enum TransactionStepState
+    public class TransactionStep
     {
-        NULL_STATE = -1,
-        INITIATED = 0,
-        TIMED_OUT_1 = 1,
-        TIMED_OUT_2 = 2,
-        TIMED_OUT_3 = 3,
-        TIMEOUT_FAILED = 8,
-        TRANSITION_FAILED = 9,
-        COMPLETED = 10
-    }
-
-    public abstract class TransactionStep
-    {
-        public virtual  TransactionStepState Execute(JObject data)
-        {
-            return TransactionStepState.COMPLETED;
-        }
+        public int Id { get; set; }
+        public int TransactionId { get; set; }
+        public int OrderNumber { get; set; }
+        public DateTime Timestamp { get; set; }
+        public string SerializedTransactionStepData { get; set; } = string.Empty;
+        public string State { get; set; } = string.Empty;
+        public string SerializedTransactionErrors { get; set; } = string.Empty;
     }
 }

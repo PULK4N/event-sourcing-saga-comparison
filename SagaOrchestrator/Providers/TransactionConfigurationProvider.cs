@@ -12,3 +12,5 @@ namespace SagaOrchestrator
         }
     }
 }
+
+// Implementirati da kafka svima moze da salje poruke
