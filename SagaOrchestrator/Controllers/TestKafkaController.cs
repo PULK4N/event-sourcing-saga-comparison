@@ -61,5 +61,16 @@ namespace SagaOrchestrator.Controllers
                 Ok("sent: " + new { healthCheckObject1, healthCheckObject2 })
             );
         }
+
+        [HttpPost("test-sending-credit-request")]
+        public async Task<IActionResult> SendAccountCreditRequest(
+            [FromServices] IMessageProducer<string, string> messageProducer
+        )
+        {
+            var jobject1 = "account credit request";
+            var jobject2 = "account credit request";
+            await messageProducer.ProduceAsync("account-debit-request", jobject1, jobject2);
+            return await Task.FromResult(Ok("sent: " + new { jobject1, jobject2 }));
+        }
     }
 }

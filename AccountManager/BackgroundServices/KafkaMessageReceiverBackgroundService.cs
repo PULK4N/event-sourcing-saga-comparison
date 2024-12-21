@@ -1,19 +1,14 @@
 using CommunicationModule.Interfaces;
 
-// 1. Pokrenuti kafku
-// 2. Testirati da li radi slanje poruka sa Saga orchestratora
-// 3. Poslati poruku account service
-// 4. Pokrenuti account service
-// 5. Dodati CommunicationModule u accountService
-// 6. Dodati background service
-// 7. Injecktovati background service
-namespace SagaOrchestrator
+namespace AccountManager.BackgroundServices
 {
-    public class KafkaTestBackgroundService : BackgroundService
+    public class KafkaMessageReceiverBackgroundService : BackgroundService
     {
         private readonly IMessageConsumer<string, string> _messageConsumer;
 
-        public KafkaTestBackgroundService(IMessageConsumer<string, string> messageConsumer)
+        public KafkaMessageReceiverBackgroundService(
+            IMessageConsumer<string, string> messageConsumer
+        )
         {
             _messageConsumer = messageConsumer;
         }
@@ -21,7 +16,7 @@ namespace SagaOrchestrator
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await _messageConsumer.ConsumeAsync(
-                "testSendingDataFromSaga",
+                "account-debit-request",
                 async (kafkaTestModel, string2) =>
                 {
                     Console.WriteLine(kafkaTestModel.ToString());
