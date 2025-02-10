@@ -7,6 +7,10 @@ using CommunicationModule.Interfaces;
 // 5. Dodati CommunicationModule u accountService
 // 6. Dodati background service
 // 7. Injecktovati background service
+// 8. Primiti poruku account manageru
+// 9. Dodati slanje poruka u account manageru
+// 10. Promeniti u kafki da jedan queue bude saga return koji bi primao sve requestove od drugih mikroservisa
+// 11.
 namespace SagaOrchestrator
 {
     public class KafkaTestBackgroundService : BackgroundService

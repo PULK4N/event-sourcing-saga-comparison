@@ -12,26 +12,34 @@ public class KafkaConsumer<TKey, TValue> : IMessageConsumer<TKey, TValue>, IDisp
     private readonly IConsumer<TKey, TValue> _consumer;
     private readonly ILogger<KafkaConsumer<TKey, TValue>> _logger;
 
-    public KafkaConsumer(IOptions<KafkaConsumerConfig> config, ILogger<KafkaConsumer<TKey, TValue>> logger, IConfiguration configuration)
+    public KafkaConsumer(
+        IOptions<KafkaConsumerConfig> config,
+        ILogger<KafkaConsumer<TKey, TValue>> logger,
+        IConfiguration configuration
+    )
     {
         var consumerConfig = new ConsumerConfig
         {
             BootstrapServers = config.Value.BootstrapServers,
             GroupId = config.Value.GroupId,
-            AutoOffsetReset = AutoOffsetReset.Earliest
+            AutoOffsetReset = AutoOffsetReset.Earliest,
         };
 
         _consumer = new ConsumerBuilder<TKey, TValue>(consumerConfig).Build();
         _logger = logger;
     }
 
-    public async Task ConsumeAsync(string topic, Func<TKey, TValue, Task> messageHandler, CancellationToken cancellationToken)
+    public async Task ConsumeAsync(
+        string topic,
+        Func<TKey, TValue, Task> messageHandler,
+        CancellationToken cancellationToken
+    )
     {
         _consumer.Subscribe(topic);
 
-        try
+        while (!cancellationToken.IsCancellationRequested)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            try
             {
                 await Task.Delay(10);
 
@@ -39,21 +47,23 @@ public class KafkaConsumer<TKey, TValue> : IMessageConsumer<TKey, TValue>, IDisp
 
                 if (consumeResult != null)
                 {
-                    _logger.LogInformation($"Received message from Kafka. Key: {consumeResult.Message.Key}, Value: {consumeResult.Message.Value}");
+                    _logger.LogInformation(
+                        $"Received message from Kafka. Key: {consumeResult.Message.Key}, Value: {consumeResult.Message.Value}"
+                    );
 
                     await messageHandler(consumeResult.Message.Key, consumeResult.Message.Value);
 
                     _consumer.Commit(consumeResult);
                 }
             }
-        }
-        catch (ConsumeException ex)
-        {
-            _logger.LogError($"Error consuming message from Kafka: {ex.Error.Reason}");
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Kafka consuming error: {ex}");
+            catch (ConsumeException ex)
+            {
+                _logger.LogError($"Error consuming message from Kafka: {ex.Error.Reason}");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Kafka consuming error: {ex}");
+            }
         }
     }
 
