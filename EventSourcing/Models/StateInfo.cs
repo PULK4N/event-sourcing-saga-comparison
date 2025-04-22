@@ -1,0 +1,16 @@
+namespace EventSourcing.Models
+{
+    /*
+     * State info for a given aggregate
+     * Make sure to instantiate only in State Handlers
+     */
+    public class StateInfo
+    {
+        public Guid AggregateId { get; set; }
+        public uint CurrentOrderNumber { get; set; }
+        public DateTime LastUpdateTimestamp { get; set; }
+        public string StateMachineId { get; set; } = string.Empty;
+        public string State { get; set; } = "NULL_STATE";
+        public object StateData { get; set; }
+    }
+}
