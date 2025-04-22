@@ -12,5 +12,19 @@ namespace EventSourcing.Models
         public string StateMachineId { get; set; } = string.Empty;
         public string State { get; set; } = "NULL_STATE";
         public object StateData { get; set; }
+
+        private StateInfo() { }
+
+        public static StateInfo Create(object stateData, string stateMachineId, Guid aggregateId)
+        {
+            var stateInfo = new StateInfo();
+            stateInfo.CurrentOrderNumber = 1;
+            stateInfo.AggregateId = aggregateId;
+            stateInfo.LastUpdateTimestamp = DateTime.UtcNow;
+            stateInfo.StateMachineId = stateMachineId;
+            stateInfo.StateData = stateData;
+
+            return stateInfo;
+        }
     }
 }
