@@ -10,6 +10,8 @@ namespace EventSourcing.Models
         public uint CurrentOrderNumber { get; set; }
         public DateTime LastUpdateTimestamp { get; set; }
         public string StateMachineId { get; set; } = string.Empty;
+
+        // State might not yet need to be implemented
         public string State { get; set; } = "NULL_STATE";
         public object StateData { get; set; }
 

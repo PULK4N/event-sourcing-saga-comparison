@@ -6,6 +6,7 @@ namespace EventSourcing.Models
 
         public DateTime Timestamp { get; set; }
         public Guid AggregateId { get; set; }
+        public uint OrderNumber { get; set; }
         public Guid EventExecutor { get; set; }
         public string EventName { get; set; }
         public string StateMachineId { get; set; }
