@@ -8,11 +8,17 @@ namespace EventSourcing.Core
     {
         private readonly IEventStore _eventStore;
         private readonly IReducerProvider _reducerProvider;
+        private readonly IStateDataProvider _stateDataProvider;
 
-        public StateMachineHandler(IEventStore eventStore, IReducerProvider reducerProvider)
+        public StateMachineHandler(
+            IEventStore eventStore,
+            IReducerProvider reducerProvider,
+            IStateDataProvider stateDataProvider
+        )
         {
             _eventStore = eventStore;
             _reducerProvider = reducerProvider;
+            _stateDataProvider = stateDataProvider;
         }
 
         public async Task<Dictionary<Guid, StateInfo>> ExecuteEvents(
@@ -51,7 +57,11 @@ namespace EventSourcing.Core
         {
             var firstEventData = aggregateEventsToExecute.First();
             var stateMachineId = firstEventData.StateMachineId;
-            var emptyStateData = GetStateDataByStateMachine(stateMachineId);
+
+            var emptyStateData = await _stateDataProvider.GetStateDataByStateMachine(
+                stateMachineId
+            );
+
             AssignOrderNumbers(existingEvents, aggregateEventsToExecute);
 
             var initialStateInfo = StateInfo.Create(emptyStateData, stateMachineId, aggregateId);
@@ -97,21 +107,6 @@ namespace EventSourcing.Core
             }
 
             return stateInfo;
-        }
-
-        /*
-         * Supposed to read from the configuration file and create an object based on StateMachineProvider
-         * Temporary set to the only state machine that we are using
-         */
-        private object GetStateDataByStateMachine(string stateMachineId)
-        {
-            var stateDataName = "AccountStateData";
-            var type = Type.GetType(stateDataName);
-            if (type is null)
-                throw new StateDataNotFoundException(stateDataName);
-
-            var stateData = Activator.CreateInstance(type);
-            return stateDataName;
         }
     }
 }
