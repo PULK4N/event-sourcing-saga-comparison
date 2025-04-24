@@ -5,8 +5,8 @@ namespace Core.Tests;
 
 public class OrderNumberHelperUnitTest
 {
-    [Fact]
-    public void Test1()
+    [Fact()]
+    public void AssignOrderNumbersToNewEventsIfPreviousExist()
     {
         var payloads = new List<EventPayload>();
 
@@ -40,5 +40,30 @@ public class OrderNumberHelperUnitTest
         Assert.Equal(newPayloads[0].OrderNumber.ToString(), 11.ToString());
         Assert.Equal(newPayloads[1].OrderNumber.ToString(), 12.ToString());
         Assert.Equal(newPayloads[2].OrderNumber.ToString(), 13.ToString());
+    }
+
+    [Fact]
+    public void AssignOrderNumbersToNewEventsIfThereAreNoPreviousEvents()
+    {
+        var payloads = new List<EventPayload>();
+
+        var newPayloads = new List<EventPayload>();
+        for (int i = 0; i < 3; i++)
+        {
+            var payload = EventPayload.Create(
+                new Dictionary<string, object>(),
+                $"NewEventName{i}",
+                Guid.NewGuid(),
+                "test-state-machine"
+            );
+            newPayloads.Add(payload);
+        }
+
+        var orderNumberHelper = new OrderNumberHelper();
+        orderNumberHelper.AssignOrderNumbers(payloads, newPayloads);
+
+        Assert.Equal(newPayloads[0].OrderNumber.ToString(), 1.ToString());
+        Assert.Equal(newPayloads[1].OrderNumber.ToString(), 2.ToString());
+        Assert.Equal(newPayloads[2].OrderNumber.ToString(), 3.ToString());
     }
 }
