@@ -1,5 +1,6 @@
 using Contracts;
 using EventSourcing.Core.Interfaces;
+using EventSourcing.Core.Providers;
 using EventSourcing.Models;
 
 namespace EventSourcing.Core
@@ -9,16 +10,19 @@ namespace EventSourcing.Core
         private readonly IEventStore _eventStore;
         private readonly IReducerProvider _reducerProvider;
         private readonly IStateDataProvider _stateDataProvider;
+        private readonly OrderNumberHelper _orderNumberHelper;
 
         public StateMachineHandler(
             IEventStore eventStore,
             IReducerProvider reducerProvider,
-            IStateDataProvider stateDataProvider
+            IStateDataProvider stateDataProvider,
+            OrderNumberHelper orderNumberHelper
         )
         {
             _eventStore = eventStore;
             _reducerProvider = reducerProvider;
             _stateDataProvider = stateDataProvider;
+            _orderNumberHelper = orderNumberHelper;
         }
 
         public async Task<Dictionary<Guid, StateInfo>> ExecuteEvents(
@@ -62,7 +66,7 @@ namespace EventSourcing.Core
                 stateMachineId
             );
 
-            AssignOrderNumbers(existingEvents, aggregateEventsToExecute);
+            _orderNumberHelper.AssignOrderNumbers(existingEvents, aggregateEventsToExecute);
 
             var initialStateInfo = StateInfo.Create(emptyStateData, stateMachineId, aggregateId);
 
@@ -75,21 +79,6 @@ namespace EventSourcing.Core
         /*
          * Requires a test
          */
-
-        private void AssignOrderNumbers(
-            IEnumerable<EventPayload> existingEvents,
-            IEnumerable<EventPayload> aggregateEventsToExecute
-        )
-        {
-            uint currentLastOrderNumber = 0;
-            if (existingEvents.Any())
-                currentLastOrderNumber = existingEvents.Max(x => x.OrderNumber);
-
-            foreach (var payload in aggregateEventsToExecute)
-            {
-                payload.OrderNumber = ++currentLastOrderNumber;
-            }
-        }
 
         private async Task<StateInfo> GetStateInfo(
             StateInfo stateInfo,
