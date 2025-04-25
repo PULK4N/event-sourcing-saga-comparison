@@ -1,5 +1,7 @@
 using Contracts;
 using EventSourcing.Core.Containers;
+using EventSourcing.Core.Interfaces;
+using EventSourcing.Core.Providers;
 using EventSourcing.Models;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,7 +13,36 @@ namespace EventSourcing.Core
         {
             var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
+            services.AddScoped<OrderNumberHelper>();
+            services.AddScoped<StateMachineHandler>();
+
             services.RegisterReducers();
+            services.RegisterStateDataTypes();
+
+            if (environmentName == "development")
+                services.RegisterDevEnvironmentProviders();
+            else
+                services.RegisterProdEnvironmentProviders();
+
+            return services;
+        }
+
+        public static ServiceCollection RegisterDevEnvironmentProviders(
+            this ServiceCollection services
+        )
+        {
+            services.AddScoped<IStateDataProvider, AppSettingsConfigurationStateDataProvider>();
+            services.AddScoped<IReducerProvider, AppSettingsConfigurationReducerProvider>();
+
+            return services;
+        }
+
+        public static ServiceCollection RegisterProdEnvironmentProviders(
+            this ServiceCollection services
+        )
+        {
+            services.AddScoped<IStateDataProvider, StateDataProvider>();
+            services.AddScoped<IReducerProvider, ReducerProvider>();
 
             return services;
         }
