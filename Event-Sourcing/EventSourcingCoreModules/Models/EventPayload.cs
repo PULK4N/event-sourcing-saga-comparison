@@ -4,6 +4,7 @@ namespace EventSourcing.Models
     {
         private EventPayload() { }
 
+        public Guid Id { get; set; }
         public DateTime Timestamp { get; set; }
         public Guid AggregateId { get; set; }
         public uint OrderNumber { get; set; }
@@ -21,6 +22,7 @@ namespace EventSourcing.Models
         {
             var payload = new EventPayload();
 
+            payload.Id = Guid.NewGuid();
             payload.EventName = name;
             payload.Timestamp = DateTime.UtcNow;
             payload.Data = data;

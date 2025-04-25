@@ -2,7 +2,7 @@ using EventSourcing.Models;
 
 namespace Contracts
 {
-    public interface IEventHook
+    public interface IHookExecutor
     {
         Task RunHook(HookInfo hookInfo);
     }
