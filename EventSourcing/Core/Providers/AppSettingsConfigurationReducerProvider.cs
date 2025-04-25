@@ -21,7 +21,7 @@ namespace EventSourcing.Core.Providers
             if (reducerName is null)
                 throw new EventReducerMapNotAddedException(payload.EventName);
 
-            var type = ReducerTypeContainer.GetReducer(reducerName);
+            var type = ReducerTypeContainer.GetReducerType(reducerName);
             if (type is null)
                 throw new ReducerNotFoundException(reducerName);
 

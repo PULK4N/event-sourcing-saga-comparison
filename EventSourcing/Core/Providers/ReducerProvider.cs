@@ -14,7 +14,7 @@ namespace EventSourcing.Core.Providers
             // Change the way this is implemented
             var reducerName = string.Empty;
 
-            var type = ReducerTypeContainer.GetReducer(reducerName);
+            var type = ReducerTypeContainer.GetReducerType(reducerName);
             if (type is null)
                 throw new ReducerNotFoundException(reducerName);
 

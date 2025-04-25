@@ -4,22 +4,20 @@ using Microsoft.Extensions.Configuration;
 
 namespace EventSourcing.Core.Providers
 {
-    public class StateDataProvider : IStateDataProvider
+    public class AppSettingsConfigurationStateDataProvider : IStateDataProvider
     {
         private readonly IConfiguration _configuration;
 
-        public StateDataProvider(IConfiguration configuration)
+        public AppSettingsConfigurationStateDataProvider(IConfiguration configuration)
         {
             _configuration = configuration;
         }
 
         public Task<object> GetStateDataByStateMachine(string stateMachineId)
         {
-            // TODO:
-            throw new NotImplementedException();
-            var stateDataName = string.Empty;
-            //
-
+            var stateDataName = _configuration[stateMachineId];
+            if (stateDataName is null)
+                throw new StateMachineNotRegisteredException(stateMachineId);
             var type = StateDataTypeContainer.GetStateDataType(stateDataName);
             if (type is null)
                 throw new StateDataTypeNotFoundException(stateDataName);

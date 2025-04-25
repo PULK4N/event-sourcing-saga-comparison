@@ -1,8 +1,7 @@
 namespace EventSourcing.Models
 {
-    public interface SharedStateData
+    public interface ISharedStateData
     {
-        public Guid AggregateId { get; set; }
-        public DateTime LastUpdateTimestamp { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

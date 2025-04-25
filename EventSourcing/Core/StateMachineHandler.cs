@@ -76,10 +76,6 @@ namespace EventSourcing.Core
             return newStateInfo;
         }
 
-        /*
-         * Requires a test
-         */
-
         private async Task<StateInfo> GetStateInfo(
             StateInfo stateInfo,
             IEnumerable<EventPayload> eventPayloads

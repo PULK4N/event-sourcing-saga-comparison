@@ -1,4 +1,3 @@
-using Core.Tests.TestModels;
 using EventSourcing.Core;
 using EventSourcing.Core.Providers;
 using EventSourcing.Models;
@@ -7,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Core.Tests;
 
-public class AppSettingsConfigurationReducerProviderUnitTest
+public class AppSettingsConfigurationStateDataProviderUnitTest
 {
     public IConfiguration CreateConfiguration(Dictionary<string, string?> configurationDict)
     {
@@ -18,9 +17,16 @@ public class AppSettingsConfigurationReducerProviderUnitTest
         return configuration;
     }
 
-    [Fact()]
-    public void ReducerNotSetInConfigurationTest()
+    [Fact]
+    public void StateMachineNotSetInConfigurationTest()
     {
+        var services = new ServiceCollection();
+        try
+        {
+            services.RegisterStateDataTypes();
+        }
+        catch (Exception) { }
+
         var myConfiguration = new Dictionary<string, string?>
         {
             { "Key1", "Value1" },
@@ -30,7 +36,7 @@ public class AppSettingsConfigurationReducerProviderUnitTest
         };
         var configuration = CreateConfiguration(myConfiguration);
 
-        var reducerProvider = new AppSettingsConfigurationReducerProvider(configuration);
+        var stateDataProvider = new AppSettingsConfigurationStateDataProvider(configuration);
 
         var payload = EventPayload.Create(
             new Dictionary<string, object>(),
@@ -41,101 +47,110 @@ public class AppSettingsConfigurationReducerProviderUnitTest
 
         try
         {
-            reducerProvider.GetReducer(payload);
+            stateDataProvider.GetStateDataByStateMachine(payload.StateMachineId);
         }
-        catch (EventReducerMapNotAddedException)
+        catch (StateMachineNotRegisteredException)
         {
             Assert.True(true);
         }
         catch (Exception)
         {
-            Assert.False(true);
-        }
-    }
-
-    [Fact()]
-    public void ReducerObjectConfigurationTest()
-    {
-        var myConfiguration = new Dictionary<string, string?>
-        {
-            { "Key1", "Value1" },
-            { "Nested:Key1", "NestedValue1" },
-            { "Nested:Key2", "NestedValue2" },
-            { "RandomEvent1", "TestReducer" }
-        };
-        var configuration = CreateConfiguration(myConfiguration);
-
-        var reducerProvider = new AppSettingsConfigurationReducerProvider(configuration);
-
-        var payload = EventPayload.Create(
-            new Dictionary<string, object>(),
-            "RandomEvent1",
-            Guid.NewGuid(),
-            "test-state-machine"
-        );
-
-        try
-        {
-            reducerProvider.GetReducer(payload);
-        }
-        catch (ReducerNotFoundException)
-        {
-            Assert.True(true);
-        }
-        catch (Exception)
-        {
-            Assert.False(true);
+            Assert.True(false);
         }
     }
 
     [Fact]
-    public void MoneySubtracted()
+    public void StateDataTypeNotFoundTest()
     {
         var myConfiguration = new Dictionary<string, string?>
         {
             { "Key1", "Value1" },
             { "Nested:Key1", "NestedValue1" },
             { "Nested:Key2", "NestedValue2" },
-            { "RandomEvent1", "TransferMoney" }
+            { "RandomEvent1", null },
+            { "test-state-machine", "AccountTestStateData" }
         };
         var configuration = CreateConfiguration(myConfiguration);
 
-        var reducerProvider = new AppSettingsConfigurationReducerProvider(configuration);
-        var eventData = new Dictionary<string, object> { { "moneySent", 550 } };
+        var stateDataProvider = new AppSettingsConfigurationStateDataProvider(configuration);
+
+        var services = new ServiceCollection();
+        try
+        {
+            services.RegisterStateDataTypes();
+        }
+        catch (Exception) { }
 
         var payload = EventPayload.Create(
-            eventData,
+            new Dictionary<string, object>(),
             "RandomEvent1",
             Guid.NewGuid(),
             "test-state-machine"
         );
 
-        var stateData = new AccountStateData() { Money = 1000 };
-
         try
         {
-            var services = new ServiceCollection();
-            services.RegisterReducers();
-            var reducer = reducerProvider.GetReducer(payload).Result;
-            stateData = (AccountStateData)reducer.Reduce(stateData, payload);
-
-            Assert.Equal(450, stateData.Money);
+            stateDataProvider.GetStateDataByStateMachine(payload.StateMachineId);
         }
-        catch (EventReducerMapNotAddedException)
+        catch (StateDataTypeNotFoundException)
         {
-            Assert.False(true);
+            Assert.True(true);
         }
-        catch (ReducerNotFoundException)
+        catch (StateMachineNotRegisteredException)
         {
-            Assert.False(true);
-        }
-        catch (ReducerNotRegisteredException)
-        {
-            Assert.False(true);
+            Assert.True(false);
         }
         catch (Exception)
         {
-            Assert.False(true);
+            Assert.True(false);
+        }
+    }
+
+    [Fact]
+    public void StateDataExists()
+    {
+        var myConfiguration = new Dictionary<string, string?>
+        {
+            { "Key1", "Value1" },
+            { "Nested:Key1", "NestedValue1" },
+            { "Nested:Key2", "NestedValue2" },
+            { "RandomEvent1", null },
+            { "test-state-machine", "AccountStateData" }
+        };
+        var configuration = CreateConfiguration(myConfiguration);
+
+        var stateDataProvider = new AppSettingsConfigurationStateDataProvider(configuration);
+
+        var services = new ServiceCollection();
+        try
+        {
+            services.RegisterStateDataTypes();
+        }
+        catch (Exception) { }
+
+        var payload = EventPayload.Create(
+            new Dictionary<string, object>(),
+            "RandomEvent1",
+            Guid.NewGuid(),
+            "test-state-machine"
+        );
+
+        try
+        {
+            stateDataProvider.GetStateDataByStateMachine(payload.StateMachineId);
+            Assert.True(true);
+        }
+        catch (StateDataNotRegisteredException)
+        {
+            Assert.True(false);
+        }
+        catch (StateMachineNotRegisteredException)
+        {
+            Assert.True(false);
+        }
+        catch (Exception)
+        {
+            Assert.True(false);
         }
     }
 }
