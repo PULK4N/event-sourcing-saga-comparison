@@ -4,6 +4,6 @@ namespace Contracts
 {
     public interface IHookExecutor
     {
-        Task RunHook(HookInfo hookInfo);
+        Task RegisterHooksForExecution(params EventPayload[] payloads);
     }
 }
