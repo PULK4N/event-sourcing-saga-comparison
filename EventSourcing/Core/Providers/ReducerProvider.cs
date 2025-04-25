@@ -1,4 +1,5 @@
 using Contracts;
+using EventSourcing.Core.Containers;
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Models;
 
@@ -13,7 +14,7 @@ namespace EventSourcing.Core.Providers
             // Change the way this is implemented
             var reducerName = string.Empty;
 
-            var type = Type.GetType(reducerName);
+            var type = ReducerTypeContainer.GetReducer(reducerName);
             if (type is null)
                 throw new ReducerNotFoundException(reducerName);
 

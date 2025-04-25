@@ -1,4 +1,5 @@
 using Contracts;
+using EventSourcing.Core.Containers;
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Models;
 using Microsoft.Extensions.Configuration;
@@ -16,11 +17,11 @@ namespace EventSourcing.Core.Providers
 
         public Task<IEventReducer> GetReducer(EventPayload payload)
         {
-            var reducerName = _configuration["EventReducerMap:" + payload.EventName];
+            var reducerName = _configuration[payload.EventName];
             if (reducerName is null)
                 throw new EventReducerMapNotAddedException(payload.EventName);
 
-            var type = Type.GetType(reducerName);
+            var type = ReducerTypeContainer.GetReducer(reducerName);
             if (type is null)
                 throw new ReducerNotFoundException(reducerName);
 

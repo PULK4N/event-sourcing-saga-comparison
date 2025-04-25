@@ -1,4 +1,5 @@
 using Contracts;
+using EventSourcing.Core.Containers;
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Models;
 
@@ -12,7 +13,7 @@ namespace EventSourcing.Core.Providers
         public Task<IEventReducer> GetReducer(EventPayload payload)
         {
             var reducerName = "AccountTransactionReducer";
-            var type = Type.GetType(reducerName);
+            var type = ReducerTypeContainer.GetReducer(reducerName);
             if (type is null)
                 throw new ReducerNotFoundException(reducerName);
 
