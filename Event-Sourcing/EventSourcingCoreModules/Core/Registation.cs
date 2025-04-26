@@ -1,4 +1,3 @@
-using Contracts;
 using EventSourcing.Core.Containers;
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Core.Providers;
@@ -18,7 +17,7 @@ namespace EventSourcing.Core
 
             services.RegisterReducers();
             services.RegisterStateDataTypes();
-            services.RegisterHookTypes();
+            // services.RegisterHookTypes();
 
             if (environmentName == "development")
                 services.RegisterDevEnvironmentProviders();
@@ -34,7 +33,7 @@ namespace EventSourcing.Core
         {
             services.AddScoped<IStateDataProvider, AppSettingsConfigurationStateDataProvider>();
             services.AddScoped<IReducerProvider, AppSettingsConfigurationReducerProvider>();
-            services.AddScoped<IHookProvider, AppSettingsConfigurationHookProvider>();
+            // services.AddScoped<IHookProvider, AppSettingsConfigurationHookProvider>();
 
             return services;
         }
@@ -92,26 +91,26 @@ namespace EventSourcing.Core
             return services;
         }
 
-        public static ServiceCollection RegisterHookTypes(this ServiceCollection services)
-        {
-            var interfaceType = typeof(IEventHook);
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-            var allImplementations = assemblies
-                .SelectMany(a => a.GetTypes())
-                .Where(type => interfaceType.IsAssignableFrom(type))
-                .Where(type => !type.IsInterface)
-                .Where(type => !type.IsAbstract);
-
-            foreach (var implementation in allImplementations)
-            {
-                if (implementation is Type type)
-                    HookTypeContainer.AddHookType(implementation.ToString(), type);
-
-                services.AddScoped(implementation);
-            }
-
-            return services;
-        }
+        // public static ServiceCollection RegisterHookTypes(this ServiceCollection services)
+        // {
+        //     var interfaceType = typeof(IEventHook);
+        //     var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+        //
+        //     var allImplementations = assemblies
+        //         .SelectMany(a => a.GetTypes())
+        //         .Where(type => interfaceType.IsAssignableFrom(type))
+        //         .Where(type => !type.IsInterface)
+        //         .Where(type => !type.IsAbstract);
+        //
+        //     foreach (var implementation in allImplementations)
+        //     {
+        //         if (implementation is Type type)
+        //             HookTypeContainer.AddHookType(implementation.ToString(), type);
+        //
+        //         services.AddScoped(implementation);
+        //     }
+        //
+        //     return services;
+        // }
     }
 }

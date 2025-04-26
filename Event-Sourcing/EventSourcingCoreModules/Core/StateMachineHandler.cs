@@ -1,4 +1,3 @@
-using Contracts;
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Core.Providers;
 using EventSourcing.Models;
@@ -11,21 +10,18 @@ namespace EventSourcing.Core
         private readonly IReducerProvider _reducerProvider;
         private readonly IStateDataProvider _stateDataProvider;
         private readonly OrderNumberHelper _orderNumberHelper;
-        private readonly IHookExecutor _hookExecutor;
 
         public StateMachineHandler(
             IEventStore eventStore,
             IReducerProvider reducerProvider,
             IStateDataProvider stateDataProvider,
-            OrderNumberHelper orderNumberHelper,
-            IHookExecutor hookExecutor
+            OrderNumberHelper orderNumberHelper
         )
         {
             _eventStore = eventStore;
             _reducerProvider = reducerProvider;
             _stateDataProvider = stateDataProvider;
             _orderNumberHelper = orderNumberHelper;
-            _hookExecutor = hookExecutor;
         }
 
         public async Task<Dictionary<Guid, StateInfo>> ExecuteEvents(
@@ -78,7 +74,7 @@ namespace EventSourcing.Core
 
             await _eventStore.WriteEvents(aggregateEventsToExecute.ToArray());
 
-            await _hookExecutor.RegisterHooksForExecution(aggregateEventsToExecute.ToArray());
+            // await _hookExecutor.RegisterHooksForExecution(aggregateEventsToExecute.ToArray());
 
             return newStateInfo;
         }

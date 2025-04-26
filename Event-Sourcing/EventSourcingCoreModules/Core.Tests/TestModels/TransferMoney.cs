@@ -1,4 +1,4 @@
-using Contracts;
+using EventSourcing.Core.Interfaces;
 using EventSourcing.Models;
 
 namespace Core.Tests.TestModels;

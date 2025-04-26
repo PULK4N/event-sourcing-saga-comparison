@@ -1,4 +1,3 @@
-using Contracts;
 using EventSourcing.Core.Containers;
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Models;
