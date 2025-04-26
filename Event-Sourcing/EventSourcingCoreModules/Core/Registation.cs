@@ -8,7 +8,7 @@ namespace EventSourcing.Core
 {
     public static class Registration
     {
-        public static IServiceCollection RegisterInjection(this ServiceCollection services)
+        public static IServiceCollection RegisterInjection(this IServiceCollection services)
         {
             var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
@@ -27,8 +27,8 @@ namespace EventSourcing.Core
             return services;
         }
 
-        public static ServiceCollection RegisterDevEnvironmentProviders(
-            this ServiceCollection services
+        public static IServiceCollection RegisterDevEnvironmentProviders(
+            this IServiceCollection services
         )
         {
             services.AddScoped<IStateDataProvider, AppSettingsConfigurationStateDataProvider>();
@@ -38,8 +38,8 @@ namespace EventSourcing.Core
             return services;
         }
 
-        public static ServiceCollection RegisterProdEnvironmentProviders(
-            this ServiceCollection services
+        public static IServiceCollection RegisterProdEnvironmentProviders(
+            this IServiceCollection services
         )
         {
             services.AddScoped<IStateDataProvider, StateDataProvider>();
@@ -48,7 +48,7 @@ namespace EventSourcing.Core
             return services;
         }
 
-        public static ServiceCollection RegisterReducers(this ServiceCollection services)
+        public static IServiceCollection RegisterReducers(this IServiceCollection services)
         {
             var interfaceType = typeof(IEventReducer);
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
@@ -71,7 +71,7 @@ namespace EventSourcing.Core
             return services;
         }
 
-        public static ServiceCollection RegisterStateDataTypes(this ServiceCollection services)
+        public static IServiceCollection RegisterStateDataTypes(this IServiceCollection services)
         {
             var interfaceType = typeof(ISharedStateData);
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
