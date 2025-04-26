@@ -6,13 +6,13 @@ namespace EventSourcing.Core
 {
     public class StateMachineHandler
     {
-        private readonly IEventStore _eventStore;
+        private readonly IEventStoreWithOutbox _eventStore;
         private readonly IReducerProvider _reducerProvider;
         private readonly IStateDataProvider _stateDataProvider;
         private readonly OrderNumberHelper _orderNumberHelper;
 
         public StateMachineHandler(
-            IEventStore eventStore,
+            IEventStoreWithOutbox eventStore,
             IReducerProvider reducerProvider,
             IStateDataProvider stateDataProvider,
             OrderNumberHelper orderNumberHelper
@@ -72,9 +72,7 @@ namespace EventSourcing.Core
             var existingStateInfo = await GetStateInfo(initialStateInfo, existingEvents);
             var newStateInfo = await GetStateInfo(existingStateInfo, aggregateEventsToExecute);
 
-            await _eventStore.WriteEvents(aggregateEventsToExecute.ToArray());
-
-            // await _hookExecutor.RegisterHooksForExecution(aggregateEventsToExecute.ToArray());
+            await _eventStore.WriteEventsWithOutbox(aggregateEventsToExecute.ToArray());
 
             return newStateInfo;
         }

@@ -2,10 +2,10 @@ using EventSourcing.Models;
 
 namespace EventSourcing.Core.Interfaces
 {
-    public interface IEventStore
+    public interface IEventStoreWithOutbox
     {
         Task<Dictionary<Guid, EventPayload[]>> GetEventsByAggregate(params Guid[] AggregateId);
 
-        Task<IEnumerable<EventPayload>> WriteEvents(params EventPayload[] payloads);
+        Task<IEnumerable<EventPayload>> WriteEventsWithOutbox(params EventPayload[] payloads);
     }
 }
