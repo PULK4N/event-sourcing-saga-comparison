@@ -10,7 +10,7 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddControllers();
-        builder.Services.AddScoped<IEventStoreWithOutbox, EventStoreWithOutboxService>();
+        builder.Services.AddScoped<IEventStoreWithOutbox, EventStoreWithOutbox>();
         builder.Services.RegisterEventSourcingCoreInjection();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

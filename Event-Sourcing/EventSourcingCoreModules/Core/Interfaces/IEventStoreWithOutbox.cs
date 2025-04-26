@@ -6,6 +6,6 @@ namespace EventSourcing.Core.Interfaces
     {
         Task<Dictionary<Guid, EventPayload[]>> GetEventsByAggregate(params Guid[] AggregateId);
 
-        Task<IEnumerable<EventPayload>> WriteEventsWithOutbox(params EventPayload[] payloads);
+        Task WriteEventsWithOutbox(params EventPayload[] payloads);
     }
 }
