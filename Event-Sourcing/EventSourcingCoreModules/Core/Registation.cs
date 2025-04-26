@@ -8,7 +8,9 @@ namespace EventSourcing.Core
 {
     public static class Registration
     {
-        public static IServiceCollection RegisterInjection(this IServiceCollection services)
+        public static IServiceCollection RegisterEventSourcingCoreInjection(
+            this IServiceCollection services
+        )
         {
             var environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
@@ -19,7 +21,7 @@ namespace EventSourcing.Core
             services.RegisterStateDataTypes();
             // services.RegisterHookTypes();
 
-            if (environmentName == "development")
+            if (environmentName == "Development")
                 services.RegisterDevEnvironmentProviders();
             else
                 services.RegisterProdEnvironmentProviders();

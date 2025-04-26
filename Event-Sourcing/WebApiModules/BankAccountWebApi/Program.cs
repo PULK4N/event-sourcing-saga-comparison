@@ -1,4 +1,6 @@
+using BankAccountWebApi.Controllers;
 using EventSourcing.Core;
+using EventSourcing.Core.Interfaces;
 
 internal class Program
 {
@@ -8,7 +10,8 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddControllers();
-        builder.Services.RegisterInjection();
+        builder.Services.AddScoped<IEventStoreWithOutbox, EventStoreWithOutboxService>();
+        builder.Services.RegisterEventSourcingCoreInjection();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
