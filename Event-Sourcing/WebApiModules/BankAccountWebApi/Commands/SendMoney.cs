@@ -23,8 +23,9 @@ public class SendMoneyCommand
         };
         var payload = EventPayload.Create(
             eventData,
-            "TransferMoney",
-            Guid.NewGuid(),
+            "MoneyTransfered",
+            CurrentUser,
+            CurrentUser,
             "test-state-machine"
         );
 
@@ -35,7 +36,8 @@ public class SendMoneyCommand
         var receivePayload = EventPayload.Create(
             receivePayloadData,
             "MoneyReceivedByTransfer",
-            Guid.NewGuid(),
+            CurrentUser,
+            UserSentTo,
             "test-state-machine"
         );
 

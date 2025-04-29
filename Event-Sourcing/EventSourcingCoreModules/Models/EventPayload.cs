@@ -17,6 +17,7 @@ namespace EventSourcing.Models
             Dictionary<string, object> data,
             string name,
             Guid eventExecutor,
+            Guid AggregateId,
             string stateMachineId
         )
         {
@@ -28,6 +29,7 @@ namespace EventSourcing.Models
             payload.Data = data;
             payload.StateMachineId = stateMachineId;
             payload.EventExecutor = eventExecutor;
+            payload.AggregateId = AggregateId;
 
             return payload;
         }

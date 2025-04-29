@@ -10,6 +10,11 @@ public class EventStoreWithOutbox : IEventStoreWithOutbox
 {
     private readonly EventSourcingDbContext _applicationDbContext;
 
+    public EventStoreWithOutbox(EventSourcingDbContext applicationDbContext)
+    {
+        _applicationDbContext = applicationDbContext;
+    }
+
     public async Task<Dictionary<Guid, EventPayload[]>> GetEventsByAggregate(
         params Guid[] AggregateIds
     )
@@ -38,23 +43,14 @@ public class EventStoreWithOutbox : IEventStoreWithOutbox
     public async Task WriteEventsWithOutbox(params EventPayload[] payloads)
     {
         var aggregateIds = payloads.Select(x => x.AggregateId);
-        var serializedPalyads = payloads.Select(SerializedEventPayload.FromPayload);
-
-        var dbpayloads = _applicationDbContext
-            .SerializedEventPayload
-            .Where(x => aggregateIds.Contains(x.AggregateId));
-
-        _applicationDbContext.SerializedEventPayload.RemoveRange(dbpayloads);
-
-        var allPayloads = dbpayloads.ToList();
-        allPayloads.AddRange(serializedPalyads);
+        var serializedPayloads = payloads.Select(SerializedEventPayload.FromPayload);
 
         var serializedPayloadMessages = payloads.Select(SerializedPayloadMessage.FromPayload);
 
         await _applicationDbContext
             .SerializedPayloadMessage
             .AddRangeAsync(serializedPayloadMessages);
-        await _applicationDbContext.SerializedEventPayload.AddRangeAsync(allPayloads);
+        await _applicationDbContext.SerializedEventPayload.AddRangeAsync(serializedPayloads);
         await _applicationDbContext.SaveChangesAsync();
     }
 }

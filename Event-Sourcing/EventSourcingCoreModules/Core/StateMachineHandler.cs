@@ -49,6 +49,8 @@ namespace EventSourcing.Core
                 stateInfoDictionary.Add(aggregateId, stateInfo);
             }
 
+            await _eventStore.WriteEventsWithOutbox(eventsToExecute.ToArray());
+
             return stateInfoDictionary;
         }
 
@@ -71,8 +73,6 @@ namespace EventSourcing.Core
 
             var existingStateInfo = await GetStateInfo(initialStateInfo, existingEvents);
             var newStateInfo = await GetStateInfo(existingStateInfo, aggregateEventsToExecute);
-
-            await _eventStore.WriteEventsWithOutbox(aggregateEventsToExecute.ToArray());
 
             return newStateInfo;
         }

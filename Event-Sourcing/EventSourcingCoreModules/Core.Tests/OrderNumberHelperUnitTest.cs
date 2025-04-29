@@ -16,6 +16,7 @@ public class OrderNumberHelperUnitTest
                 new Dictionary<string, object>(),
                 $"RandomEventName{i}",
                 Guid.NewGuid(),
+                Guid.NewGuid(),
                 "test-state-machine"
             );
             payload.OrderNumber = i;
@@ -28,6 +29,7 @@ public class OrderNumberHelperUnitTest
             var payload = EventPayload.Create(
                 new Dictionary<string, object>(),
                 $"NewEventName{i}",
+                Guid.NewGuid(),
                 Guid.NewGuid(),
                 "test-state-machine"
             );
@@ -53,6 +55,7 @@ public class OrderNumberHelperUnitTest
             var payload = EventPayload.Create(
                 new Dictionary<string, object>(),
                 $"NewEventName{i}",
+                Guid.NewGuid(),
                 Guid.NewGuid(),
                 "test-state-machine"
             );

@@ -26,7 +26,7 @@ namespace BankAccountWebApi.Models
             serilalizedPayload.EventName = payload.EventName;
             serilalizedPayload.StateMachineId = payload.StateMachineId;
 
-            serilalizedPayload.SerializedJsonData = JsonConvert.SerializeObject(payload.Data);
+            serilalizedPayload.SerializedJsonData = JsonConvert.SerializeObject(payload);
 
             return serilalizedPayload;
         }
