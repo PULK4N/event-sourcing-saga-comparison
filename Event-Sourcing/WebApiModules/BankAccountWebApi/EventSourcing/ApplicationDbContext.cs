@@ -1,7 +1,7 @@
-using EventSourcing.Models;
+using BankAccountWebApi.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace BankAccountWebApi.Controllers;
+namespace BankAccountWebApi.EventSourcing;
 
 public class EventSourcingDbContext : DbContext
 {

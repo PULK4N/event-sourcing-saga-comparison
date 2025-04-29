@@ -25,7 +25,7 @@ namespace EventSourcing.Core
         }
 
         public async Task<Dictionary<Guid, StateInfo>> ExecuteEvents(
-            IEnumerable<EventPayload> eventsToExecute
+            params EventPayload[] eventsToExecute
         )
         {
             var aggregateIds = eventsToExecute.Select(x => x.AggregateId).Distinct().ToArray();

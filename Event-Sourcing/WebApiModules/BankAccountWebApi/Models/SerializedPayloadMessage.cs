@@ -1,6 +1,7 @@
+using EventSourcing.Models;
 using Newtonsoft.Json;
 
-namespace EventSourcing.Models
+namespace BankAccountWebApi.Models
 {
     public enum MessageStatus
     {

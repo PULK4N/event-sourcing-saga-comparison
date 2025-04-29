@@ -1,4 +1,5 @@
-using BankAccountWebApi.Controllers;
+using BankAccountWebApi.Commands;
+using BankAccountWebApi.EventSourcing;
 using EventSourcing.Core;
 using EventSourcing.Core.Interfaces;
 
@@ -9,9 +10,11 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        builder.Services.AddControllers();
+        builder.Services.AddControllers().AddNewtonsoftJson();
+
         builder.Services.AddScoped<IEventStoreWithOutbox, EventStoreWithOutbox>();
         builder.Services.RegisterEventSourcingCoreInjection();
+        builder.Services.AddScoped<SendMoneyCommand>();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();

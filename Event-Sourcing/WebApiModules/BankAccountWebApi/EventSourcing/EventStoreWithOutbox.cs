@@ -1,9 +1,10 @@
+using BankAccountWebApi.Models;
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
-namespace BankAccountWebApi.Controllers;
+namespace BankAccountWebApi.EventSourcing;
 
 public class EventStoreWithOutbox : IEventStoreWithOutbox
 {
