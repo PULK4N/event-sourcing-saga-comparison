@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\EventSourcingCoreModules\Core\Core.csproj" />
+    <ProjectReference Include="..\..\EventSourcingCoreModules\Persistence\Persistence.csproj" />
   </ItemGroup>
 
 </Project>
