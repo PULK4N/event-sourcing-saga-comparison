@@ -1,4 +1,7 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using WebShopWebApi.Commands;
+using WebShopWebApi.DTOs;
 
 namespace WebShopWebApi.Controllers;
 
@@ -28,10 +31,12 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly ILogger<WeatherForecastController> _logger;
+    private readonly IMediator _mediator;
 
-    public WeatherForecastController(ILogger<WeatherForecastController> logger)
+    public WeatherForecastController(ILogger<WeatherForecastController> logger, IMediator mediator)
     {
         _logger = logger;
+        _mediator = mediator;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
@@ -49,5 +54,12 @@ public class WeatherForecastController : ControllerBase
                     }
             )
             .ToArray();
+    }
+
+    [HttpPost("random-test")]
+    public async Task<TestDTO> Post([FromBody] TestCommand testCommand)
+    {
+        var result = await _mediator.Send(testCommand);
+        return result;
     }
 }
