@@ -42,6 +42,7 @@ public class AppSettingsConfigurationStateDataProviderUnitTest
             new Dictionary<string, object>(),
             "RandomEvent1",
             Guid.NewGuid(),
+            Guid.NewGuid(),
             "test-state-machine"
         );
 
@@ -84,6 +85,7 @@ public class AppSettingsConfigurationStateDataProviderUnitTest
         var payload = EventPayload.Create(
             new Dictionary<string, object>(),
             "RandomEvent1",
+            Guid.NewGuid(),
             Guid.NewGuid(),
             "test-state-machine"
         );
@@ -131,6 +133,7 @@ public class AppSettingsConfigurationStateDataProviderUnitTest
         var payload = EventPayload.Create(
             new Dictionary<string, object>(),
             "RandomEvent1",
+            Guid.NewGuid(),
             Guid.NewGuid(),
             "test-state-machine"
         );

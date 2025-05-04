@@ -1,6 +1,6 @@
 using EventSourcing.Models;
 
-namespace Contracts
+namespace EventSourcing.Core.Interfaces
 {
     public interface IEventReducer
     {

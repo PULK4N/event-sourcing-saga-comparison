@@ -36,6 +36,7 @@ public class AppSettingsConfigurationReducerProviderUnitTest
             new Dictionary<string, object>(),
             "RandomEvent1",
             Guid.NewGuid(),
+            Guid.NewGuid(),
             "test-state-machine"
         );
 
@@ -70,6 +71,7 @@ public class AppSettingsConfigurationReducerProviderUnitTest
         var payload = EventPayload.Create(
             new Dictionary<string, object>(),
             "RandomEvent1",
+            Guid.NewGuid(),
             Guid.NewGuid(),
             "test-state-machine"
         );
@@ -106,6 +108,7 @@ public class AppSettingsConfigurationReducerProviderUnitTest
         var payload = EventPayload.Create(
             eventData,
             "RandomEvent1",
+            Guid.NewGuid(),
             Guid.NewGuid(),
             "test-state-machine"
         );

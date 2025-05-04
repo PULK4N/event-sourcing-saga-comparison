@@ -1,4 +1,3 @@
-using Contracts;
 using EventSourcing.Models;
 
 namespace EventSourcing.Core.Interfaces

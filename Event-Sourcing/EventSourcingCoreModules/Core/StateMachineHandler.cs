@@ -1,4 +1,3 @@
-using Contracts;
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Core.Providers;
 using EventSourcing.Models;
@@ -7,13 +6,13 @@ namespace EventSourcing.Core
 {
     public class StateMachineHandler
     {
-        private readonly IEventStore _eventStore;
+        private readonly IEventStoreWithOutbox _eventStore;
         private readonly IReducerProvider _reducerProvider;
         private readonly IStateDataProvider _stateDataProvider;
         private readonly OrderNumberHelper _orderNumberHelper;
 
         public StateMachineHandler(
-            IEventStore eventStore,
+            IEventStoreWithOutbox eventStore,
             IReducerProvider reducerProvider,
             IStateDataProvider stateDataProvider,
             OrderNumberHelper orderNumberHelper
@@ -26,7 +25,7 @@ namespace EventSourcing.Core
         }
 
         public async Task<Dictionary<Guid, StateInfo>> ExecuteEvents(
-            IEnumerable<EventPayload> eventsToExecute
+            params EventPayload[] eventsToExecute
         )
         {
             var aggregateIds = eventsToExecute.Select(x => x.AggregateId).Distinct().ToArray();
@@ -49,6 +48,8 @@ namespace EventSourcing.Core
 
                 stateInfoDictionary.Add(aggregateId, stateInfo);
             }
+
+            await _eventStore.WriteEventsWithOutbox(eventsToExecute.ToArray());
 
             return stateInfoDictionary;
         }

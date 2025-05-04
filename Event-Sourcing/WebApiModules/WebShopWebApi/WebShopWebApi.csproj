@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\EventSourcingCoreModules\Core\Core.csproj" />
+    <ProjectReference Include="..\..\EventSourcingCoreModules\Models\Models.csproj" />
+    <ProjectReference Include="..\..\EventSourcingCoreModules\Persistence\Persistence.csproj" />
+    <ProjectReference Include="..\..\MediatRActionModules\ActionImplementations\ActionImplementations.csproj" />
+    <ProjectReference Include="..\..\MediatRActionModules\ActionModels\ActionModels.csproj" />
+  </ItemGroup>
+
+</Project>
