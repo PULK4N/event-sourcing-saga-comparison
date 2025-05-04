@@ -14,7 +14,7 @@ public class WeatherForecast
 
 [ApiController]
 [Route("[controller]")]
-public class WeatherForecastController : ControllerBase
+public class WeatherForecastController : BaseMediaRController
 {
     private static readonly string[] Summaries = new[]
     {
@@ -31,12 +31,11 @@ public class WeatherForecastController : ControllerBase
     };
 
     private readonly ILogger<WeatherForecastController> _logger;
-    private readonly IMediator _mediator;
 
     public WeatherForecastController(ILogger<WeatherForecastController> logger, IMediator mediator)
+        : base(mediator)
     {
         _logger = logger;
-        _mediator = mediator;
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
@@ -59,7 +58,6 @@ public class WeatherForecastController : ControllerBase
     [HttpPost("random-test")]
     public async Task<TestDTO> Post([FromBody] TestCommand testCommand)
     {
-        var result = await _mediator.Send(testCommand);
-        return result;
+        return await Execute<TestDTO>(testCommand);
     }
 }
