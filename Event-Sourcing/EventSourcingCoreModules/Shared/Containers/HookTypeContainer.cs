@@ -1,4 +1,4 @@
-namespace EventSourcing.Core.Containers
+namespace EventSourcing.Shared.Containers
 {
     public static class HookTypeContainer
     {

@@ -1,4 +1,4 @@
-using EventSourcing.Core.Containers;
+using EventSourcing.Shared.Containers;
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Core.Providers;
 using EventSourcing.Shared.Models;
@@ -60,6 +60,26 @@ namespace EventSourcing.Core
             {
                 if (implementation is Type type)
                     StateDataTypeContainer.AddStateDataType(implementation.ToString(), type);
+            }
+
+            return services;
+        }
+
+        public static IServiceCollection RegisterEventTypes(this IServiceCollection services)
+        {
+            var interfaceType = typeof(ISharedStateData);
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            var allImplementations = assemblies
+                .SelectMany(a => a.GetTypes())
+                .Where(type => interfaceType.IsAssignableFrom(type))
+                .Where(type => !type.IsInterface)
+                .Where(type => !type.IsAbstract);
+
+            foreach (var implementation in allImplementations)
+            {
+                if (implementation is Type type)
+                    EventTypeContainer.AddEventType(implementation.ToString(), type);
             }
 
             return services;
