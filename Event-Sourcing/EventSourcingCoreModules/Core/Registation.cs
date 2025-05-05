@@ -1,6 +1,6 @@
-using EventSourcing.Shared.Containers;
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Core.Providers;
+using EventSourcing.Shared.Containers;
 using EventSourcing.Shared.Models;
 using Microsoft.Extensions.DependencyInjection;
 
