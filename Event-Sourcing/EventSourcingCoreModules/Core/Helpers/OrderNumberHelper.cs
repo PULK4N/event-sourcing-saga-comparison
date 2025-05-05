@@ -1,4 +1,4 @@
-using EventSourcing.Models;
+using EventSourcing.Shared.Models;
 
 namespace EventSourcing.Core.Providers
 {
@@ -11,11 +11,11 @@ namespace EventSourcing.Core.Providers
         {
             uint currentLastOrderNumber = 0;
             if (existingEvents.Any())
-                currentLastOrderNumber = existingEvents.Max(x => x.OrderNumber);
+                currentLastOrderNumber = existingEvents.Max(x => x.EventExecutionInfo.OrderNumber);
 
             foreach (var payload in aggregateEventsToExecute)
             {
-                payload.OrderNumber = ++currentLastOrderNumber;
+                payload.EventExecutionInfo.OrderNumber = ++currentLastOrderNumber;
             }
         }
     }

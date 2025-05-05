@@ -1,4 +1,4 @@
-namespace EventSourcing.Models
+namespace EventSourcing.Shared.Models
 {
     /*
      * State info for a given aggregate

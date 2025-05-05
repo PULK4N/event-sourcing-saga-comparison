@@ -1,4 +1,4 @@
-namespace EventSourcing.Models
+namespace EventSourcing.Shared.Models
 {
     public interface ISharedStateData
     {
