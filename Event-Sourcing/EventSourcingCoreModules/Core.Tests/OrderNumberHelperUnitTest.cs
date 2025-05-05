@@ -1,7 +1,8 @@
 using EventSourcing.Core.Providers;
-using EventSourcing.Models;
+using EventSourcing.Core.Tests.TestModels;
+using EventSourcing.Shared.Models;
 
-namespace Core.Tests;
+namespace EventSourcing.Core.Tests;
 
 public class OrderNumberHelperUnitTest
 {
@@ -12,26 +13,30 @@ public class OrderNumberHelperUnitTest
 
         for (uint i = 1; i <= 10; i++)
         {
+            var transferMoneyEventData = new TransferMoney() { MoneySent = 1000 };
+
             var payload = EventPayload.Create(
-                new Dictionary<string, object>(),
-                $"RandomEventName{i}",
+                $"NewEventName{i}",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                "test-state-machine"
+                "test-state-machine",
+                transferMoneyEventData
             );
-            payload.OrderNumber = i;
+            payload.EventExecutionInfo.OrderNumber = i;
             payloads.Add(payload);
         }
 
         var newPayloads = new List<EventPayload>();
         for (int i = 0; i < 3; i++)
         {
+            var transferMoneyEventData = new TransferMoney() { MoneySent = 1000 };
+
             var payload = EventPayload.Create(
-                new Dictionary<string, object>(),
                 $"NewEventName{i}",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                "test-state-machine"
+                "test-state-machine",
+                transferMoneyEventData
             );
             newPayloads.Add(payload);
         }
@@ -39,9 +44,9 @@ public class OrderNumberHelperUnitTest
         var orderNumberHelper = new OrderNumberHelper();
         orderNumberHelper.AssignOrderNumbers(payloads, newPayloads);
 
-        Assert.Equal(newPayloads[0].OrderNumber.ToString(), 11.ToString());
-        Assert.Equal(newPayloads[1].OrderNumber.ToString(), 12.ToString());
-        Assert.Equal(newPayloads[2].OrderNumber.ToString(), 13.ToString());
+        Assert.Equal(newPayloads[0].EventExecutionInfo.OrderNumber.ToString(), 11.ToString());
+        Assert.Equal(newPayloads[1].EventExecutionInfo.OrderNumber.ToString(), 12.ToString());
+        Assert.Equal(newPayloads[2].EventExecutionInfo.OrderNumber.ToString(), 13.ToString());
     }
 
     [Fact]
@@ -52,12 +57,14 @@ public class OrderNumberHelperUnitTest
         var newPayloads = new List<EventPayload>();
         for (int i = 0; i < 3; i++)
         {
+            var transferMoneyEventData = new TransferMoney() { MoneySent = 1000 };
+
             var payload = EventPayload.Create(
-                new Dictionary<string, object>(),
                 $"NewEventName{i}",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
-                "test-state-machine"
+                "test-state-machine",
+                transferMoneyEventData
             );
             newPayloads.Add(payload);
         }
@@ -65,8 +72,8 @@ public class OrderNumberHelperUnitTest
         var orderNumberHelper = new OrderNumberHelper();
         orderNumberHelper.AssignOrderNumbers(payloads, newPayloads);
 
-        Assert.Equal(newPayloads[0].OrderNumber.ToString(), 1.ToString());
-        Assert.Equal(newPayloads[1].OrderNumber.ToString(), 2.ToString());
-        Assert.Equal(newPayloads[2].OrderNumber.ToString(), 3.ToString());
+        Assert.Equal(newPayloads[0].EventExecutionInfo.OrderNumber.ToString(), 1.ToString());
+        Assert.Equal(newPayloads[1].EventExecutionInfo.OrderNumber.ToString(), 2.ToString());
+        Assert.Equal(newPayloads[2].EventExecutionInfo.OrderNumber.ToString(), 3.ToString());
     }
 }

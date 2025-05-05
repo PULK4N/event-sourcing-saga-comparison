@@ -1,10 +1,11 @@
 using EventSourcing.Core;
 using EventSourcing.Core.Providers;
-using EventSourcing.Models;
+using EventSourcing.Core.Tests.TestModels;
+using EventSourcing.Shared.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Core.Tests;
+namespace EventSourcing.Core.Tests;
 
 public class AppSettingsConfigurationStateDataProviderUnitTest
 {
@@ -38,17 +39,19 @@ public class AppSettingsConfigurationStateDataProviderUnitTest
 
         var stateDataProvider = new AppSettingsConfigurationStateDataProvider(configuration);
 
+        var transferMoneyEventData = new TransferMoney() { MoneySent = 1000 };
+
         var payload = EventPayload.Create(
-            new Dictionary<string, object>(),
             "RandomEvent1",
             Guid.NewGuid(),
             Guid.NewGuid(),
-            "test-state-machine"
+            "test-state-machine",
+            transferMoneyEventData
         );
 
         try
         {
-            stateDataProvider.GetStateDataByStateMachine(payload.StateMachineId);
+            stateDataProvider.GetStateDataByStateMachine(payload.EventExecutionInfo.StateMachineId);
         }
         catch (StateMachineNotRegisteredException)
         {
@@ -82,17 +85,19 @@ public class AppSettingsConfigurationStateDataProviderUnitTest
         }
         catch (Exception) { }
 
+        var transferMoneyEventData = new TransferMoney() { MoneySent = 1000 };
+
         var payload = EventPayload.Create(
-            new Dictionary<string, object>(),
             "RandomEvent1",
             Guid.NewGuid(),
             Guid.NewGuid(),
-            "test-state-machine"
+            "test-state-machine",
+            transferMoneyEventData
         );
 
         try
         {
-            stateDataProvider.GetStateDataByStateMachine(payload.StateMachineId);
+            stateDataProvider.GetStateDataByStateMachine(payload.EventExecutionInfo.StateMachineId);
         }
         catch (StateDataTypeNotFoundException)
         {
@@ -130,17 +135,19 @@ public class AppSettingsConfigurationStateDataProviderUnitTest
         }
         catch (Exception) { }
 
+        var transferMoneyEventData = new TransferMoney() { MoneySent = 1000 };
+
         var payload = EventPayload.Create(
-            new Dictionary<string, object>(),
             "RandomEvent1",
             Guid.NewGuid(),
             Guid.NewGuid(),
-            "test-state-machine"
+            "test-state-machine",
+            transferMoneyEventData
         );
 
         try
         {
-            stateDataProvider.GetStateDataByStateMachine(payload.StateMachineId);
+            stateDataProvider.GetStateDataByStateMachine(payload.EventExecutionInfo.StateMachineId);
             Assert.True(true);
         }
         catch (StateDataNotRegisteredException)
