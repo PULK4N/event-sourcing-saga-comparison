@@ -13,6 +13,6 @@ public class OrderItemAdded : IEvent
         var orderStateData = (OrderStateData)stateData;
         orderStateData.Items.Add(OrderItem);
 
-        return stateData;
+        return orderStateData;
     }
 }
