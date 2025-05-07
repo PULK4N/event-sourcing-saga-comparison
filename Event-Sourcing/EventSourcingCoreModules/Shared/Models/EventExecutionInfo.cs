@@ -9,5 +9,6 @@ namespace EventSourcing.Shared.Models
         public Guid Id { get; set; }
         public uint OrderNumber { get; set; }
         public string StateMachineId { get; set; }
+        public string NewState { get; set; }
     }
 }
