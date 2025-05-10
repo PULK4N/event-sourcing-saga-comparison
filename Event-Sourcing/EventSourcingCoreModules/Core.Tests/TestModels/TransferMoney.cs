@@ -1,17 +1,17 @@
-using EventSourcing.Core.Interfaces;
-using EventSourcing.Models;
+using EventSourcing.Shared.Interfaces;
+using EventSourcing.Shared.Models;
 
-namespace Core.Tests.TestModels;
+namespace EventSourcing.Core.Tests.TestModels;
 
-public class TransferMoney : IEventReducer
+public class TransferMoney : IEvent
 {
-    public object Reduce(object stateData, EventPayload payload)
+    public float MoneySent { get; set; }
+
+    public object Apply(object stateData, EventExecutionInfo eventExecutionInfo)
     {
         var accountStateData = (AccountStateData)stateData;
 
-        var moneyToSubtract = Convert.ToSingle(payload.Data["moneySent"]);
-
-        accountStateData.Money -= moneyToSubtract;
+        accountStateData.Money -= MoneySent;
 
         return accountStateData;
     }

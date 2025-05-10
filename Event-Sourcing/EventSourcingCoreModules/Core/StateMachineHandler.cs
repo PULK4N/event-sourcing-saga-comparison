@@ -1,25 +1,22 @@
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Core.Providers;
-using EventSourcing.Models;
+using EventSourcing.Shared.Models;
 
 namespace EventSourcing.Core
 {
     public class StateMachineHandler
     {
         private readonly IEventStoreWithOutbox _eventStore;
-        private readonly IReducerProvider _reducerProvider;
         private readonly IStateDataProvider _stateDataProvider;
         private readonly OrderNumberHelper _orderNumberHelper;
 
         public StateMachineHandler(
             IEventStoreWithOutbox eventStore,
-            IReducerProvider reducerProvider,
             IStateDataProvider stateDataProvider,
             OrderNumberHelper orderNumberHelper
         )
         {
             _eventStore = eventStore;
-            _reducerProvider = reducerProvider;
             _stateDataProvider = stateDataProvider;
             _orderNumberHelper = orderNumberHelper;
         }
@@ -28,7 +25,10 @@ namespace EventSourcing.Core
             params EventPayload[] eventsToExecute
         )
         {
-            var aggregateIds = eventsToExecute.Select(x => x.AggregateId).Distinct().ToArray();
+            var aggregateIds = eventsToExecute
+                .Select(x => x.EventExecutionInfo.AggregateId)
+                .Distinct()
+                .ToArray();
             var existingEvents = await _eventStore.GetEventsByAggregate(aggregateIds);
 
             var stateInfoDictionary = new Dictionary<Guid, StateInfo>();
@@ -36,7 +36,7 @@ namespace EventSourcing.Core
             foreach (var aggregateId in aggregateIds)
             {
                 var aggregateEventsToExecute = eventsToExecute.Where(
-                    x => x.AggregateId == aggregateId
+                    x => x.EventExecutionInfo.AggregateId == aggregateId
                 );
                 var existingEventsByAggregate = existingEvents[aggregateId].ToList();
 
@@ -61,7 +61,7 @@ namespace EventSourcing.Core
         )
         {
             var firstEventData = aggregateEventsToExecute.First();
-            var stateMachineId = firstEventData.StateMachineId;
+            var stateMachineId = firstEventData.EventExecutionInfo.StateMachineId;
 
             var emptyStateData = await _stateDataProvider.GetStateDataByStateMachine(
                 stateMachineId
@@ -85,11 +85,10 @@ namespace EventSourcing.Core
             var stateData = stateInfo.StateData;
             foreach (var payload in eventPayloads)
             {
-                var reducer = await _reducerProvider.GetReducer(payload);
-                stateData = reducer.Reduce(stateData, payload);
+                stateData = payload.EventData.Apply(stateData, payload.EventExecutionInfo);
                 stateInfo.StateData = stateData;
-                stateInfo.CurrentOrderNumber = payload.OrderNumber;
-                stateInfo.LastUpdateTimestamp = payload.Timestamp;
+                stateInfo.CurrentOrderNumber = payload.EventExecutionInfo.OrderNumber;
+                stateInfo.LastUpdateTimestamp = payload.EventExecutionInfo.Timestamp;
             }
 
             return stateInfo;

@@ -1,4 +1,4 @@
-using EventSourcing.Models;
+using EventSourcing.Shared.Models;
 
 namespace EventSourcing.Core.Interfaces
 {

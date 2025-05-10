@@ -1,4 +1,4 @@
-using EventSourcing.Models;
+using EventSourcing.Shared.Models;
 using Newtonsoft.Json;
 
 namespace EventSourcing.Persistence.Models
@@ -18,15 +18,15 @@ namespace EventSourcing.Persistence.Models
         {
             var serilalizedPayload = new SerializedEventPayload();
 
-            serilalizedPayload.Id = payload.Id;
-            serilalizedPayload.Timestamp = payload.Timestamp;
-            serilalizedPayload.AggregateId = payload.AggregateId;
-            serilalizedPayload.OrderNumber = payload.OrderNumber;
-            serilalizedPayload.EventExecutor = payload.EventExecutor;
-            serilalizedPayload.EventName = payload.EventName;
-            serilalizedPayload.StateMachineId = payload.StateMachineId;
+            serilalizedPayload.Id = payload.EventExecutionInfo.Id;
+            serilalizedPayload.Timestamp = payload.EventExecutionInfo.Timestamp;
+            serilalizedPayload.AggregateId = payload.EventExecutionInfo.AggregateId;
+            serilalizedPayload.OrderNumber = payload.EventExecutionInfo.OrderNumber;
+            serilalizedPayload.EventExecutor = payload.EventExecutionInfo.EventExecutor;
+            serilalizedPayload.EventName = payload.EventExecutionInfo.EventName;
+            serilalizedPayload.StateMachineId = payload.EventExecutionInfo.StateMachineId;
 
-            serilalizedPayload.SerializedJsonData = JsonConvert.SerializeObject(payload);
+            serilalizedPayload.SerializedJsonData = JsonConvert.SerializeObject(payload.EventData);
 
             return serilalizedPayload;
         }

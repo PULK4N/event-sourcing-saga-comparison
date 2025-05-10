@@ -1,4 +1,4 @@
-using EventSourcing.Models;
+using EventSourcing.Shared.Models;
 using Newtonsoft.Json;
 
 namespace EventSourcing.Persistence.Models
@@ -21,9 +21,7 @@ namespace EventSourcing.Persistence.Models
         {
             var serilalizedPayload = new SerializedPayloadMessage();
 
-            serilalizedPayload.SerializedPayloadMessageData = JsonConvert.SerializeObject(
-                payload.Data
-            );
+            serilalizedPayload.SerializedPayloadMessageData = JsonConvert.SerializeObject(payload);
 
             return serilalizedPayload;
         }

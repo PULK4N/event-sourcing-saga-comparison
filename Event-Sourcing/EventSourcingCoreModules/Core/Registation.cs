@@ -1,7 +1,7 @@
-using EventSourcing.Core.Containers;
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Core.Providers;
-using EventSourcing.Models;
+using EventSourcing.Shared.Containers;
+using EventSourcing.Shared.Models;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventSourcing.Core
@@ -16,8 +16,6 @@ namespace EventSourcing.Core
 
             services.AddScoped<OrderNumberHelper>();
             services.AddScoped<StateMachineHandler>();
-
-            services.RegisterReducers();
             services.RegisterStateDataTypes();
             // services.RegisterHookTypes();
 
@@ -34,8 +32,6 @@ namespace EventSourcing.Core
         )
         {
             services.AddScoped<IStateDataProvider, AppSettingsConfigurationStateDataProvider>();
-            services.AddScoped<IReducerProvider, AppSettingsConfigurationReducerProvider>();
-            // services.AddScoped<IHookProvider, AppSettingsConfigurationHookProvider>();
 
             return services;
         }
@@ -45,30 +41,6 @@ namespace EventSourcing.Core
         )
         {
             services.AddScoped<IStateDataProvider, StateDataProvider>();
-            services.AddScoped<IReducerProvider, ReducerProvider>();
-
-            return services;
-        }
-
-        public static IServiceCollection RegisterReducers(this IServiceCollection services)
-        {
-            var interfaceType = typeof(IEventReducer);
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-
-            var allImplementations = assemblies
-                .SelectMany(a => a.GetTypes())
-                .Where(type => interfaceType.IsAssignableFrom(type))
-                .Where(type => !type.IsInterface)
-                .Where(type => !type.IsAbstract);
-
-            foreach (var implementation in allImplementations)
-            {
-                if (implementation is Type type)
-                {
-                    ReducerTypeContainer.AddReducerType(implementation.ToString(), type);
-                }
-                services.AddTransient(implementation);
-            }
 
             return services;
         }
@@ -93,26 +65,24 @@ namespace EventSourcing.Core
             return services;
         }
 
-        // public static ServiceCollection RegisterHookTypes(this ServiceCollection services)
-        // {
-        //     var interfaceType = typeof(IEventHook);
-        //     var assemblies = AppDomain.CurrentDomain.GetAssemblies();
-        //
-        //     var allImplementations = assemblies
-        //         .SelectMany(a => a.GetTypes())
-        //         .Where(type => interfaceType.IsAssignableFrom(type))
-        //         .Where(type => !type.IsInterface)
-        //         .Where(type => !type.IsAbstract);
-        //
-        //     foreach (var implementation in allImplementations)
-        //     {
-        //         if (implementation is Type type)
-        //             HookTypeContainer.AddHookType(implementation.ToString(), type);
-        //
-        //         services.AddScoped(implementation);
-        //     }
-        //
-        //     return services;
-        // }
+        public static IServiceCollection RegisterEventTypes(this IServiceCollection services)
+        {
+            var interfaceType = typeof(ISharedStateData);
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+
+            var allImplementations = assemblies
+                .SelectMany(a => a.GetTypes())
+                .Where(type => interfaceType.IsAssignableFrom(type))
+                .Where(type => !type.IsInterface)
+                .Where(type => !type.IsAbstract);
+
+            foreach (var implementation in allImplementations)
+            {
+                if (implementation is Type type)
+                    EventTypeContainer.AddEventType(implementation.ToString(), type);
+            }
+
+            return services;
+        }
     }
 }

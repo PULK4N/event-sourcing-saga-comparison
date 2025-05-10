@@ -1,6 +1,6 @@
-using EventSourcing.Models;
+using EventSourcing.Shared.Models;
 
-namespace Core.Tests.TestModels;
+namespace EventSourcing.Core.Tests.TestModels;
 
 public class AccountStateData : ISharedStateData
 {

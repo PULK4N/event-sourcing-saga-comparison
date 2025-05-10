@@ -1,6 +1,8 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using WebShopWebApi.Commands;
 using WebShopWebApi.Controllers;
+using WebShopWebApi.DTOs;
 
 [ApiController]
 [Route("[controller]")]

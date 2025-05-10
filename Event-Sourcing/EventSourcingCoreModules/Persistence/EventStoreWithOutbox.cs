@@ -1,6 +1,6 @@
 using EventSourcing.Core.Interfaces;
-using EventSourcing.Models;
 using EventSourcing.Persistence.Models;
+using EventSourcing.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
@@ -33,7 +33,9 @@ public class EventStoreWithOutbox : IEventStoreWithOutbox
 
         foreach (var aggregateId in AggregateIds)
         {
-            var aggregateEvents = payloads.Where(x => x.AggregateId == aggregateId);
+            var aggregateEvents = payloads.Where(
+                x => x.EventExecutionInfo.AggregateId == aggregateId
+            );
             eventsDictionary.Add(aggregateId, aggregateEvents.ToArray());
         }
 
@@ -42,7 +44,7 @@ public class EventStoreWithOutbox : IEventStoreWithOutbox
 
     public async Task WriteEventsWithOutbox(params EventPayload[] payloads)
     {
-        var aggregateIds = payloads.Select(x => x.AggregateId);
+        var aggregateIds = payloads.Select(x => x.EventExecutionInfo.AggregateId);
         var serializedPayloads = payloads.Select(SerializedEventPayload.FromPayload);
 
         var serializedPayloadMessages = payloads.Select(SerializedPayloadMessage.FromPayload);
