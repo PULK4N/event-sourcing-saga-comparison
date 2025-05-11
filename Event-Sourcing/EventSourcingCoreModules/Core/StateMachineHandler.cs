@@ -54,6 +54,14 @@ namespace EventSourcing.Core
             return stateInfoDictionary;
         }
 
+        // TODO: think how to implement impersonate
+        // Idea: Store impersonate data in some cache in a separate module
+        // Core modules -> ImpersonateModule
+        // Executor Module -> ImpersonateModule
+        // Executing action handles if Impersonating is On for a user
+        // Stores it in ImpersonateModule
+        // But since we have the same executor, how do we know that he executed it?
+        // We can since it's from the SAME SCOPE, and impersonating instance is registered as SCOPED.
         private async Task<StateInfo> GenerateStateInfo(
             Guid aggregateId,
             IEnumerable<EventPayload> existingEvents,
