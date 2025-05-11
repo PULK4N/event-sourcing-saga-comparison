@@ -18,6 +18,7 @@ namespace EventSourcing.Core
             services.AddScoped<StateMachineHandler>();
             services.RegisterStateDataTypes();
             // services.RegisterHookTypes();
+            services.AddScoped<IEventValidatorProvider, DefaultEventValidatorProvider>();
 
             if (environmentName == "Development")
                 services.RegisterDevEnvironmentProviders();
