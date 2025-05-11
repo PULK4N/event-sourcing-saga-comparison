@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using EventSourcing.Shared.Models;
 using Newtonsoft.Json;
 
@@ -16,6 +17,9 @@ namespace EventSourcing.Persistence.Models
         public int Id { get; set; }
         public string SerializedPayloadMessageData { get; set; }
         public MessageStatus Status { get; set; } = MessageStatus.New;
+
+        [Timestamp]
+        public byte[] Version { get; set; }
 
         public static SerializedPayloadMessage FromPayload(EventPayload payload)
         {
