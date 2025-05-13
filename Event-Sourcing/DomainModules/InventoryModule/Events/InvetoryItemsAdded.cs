@@ -13,7 +13,7 @@ public class InvetoryItemsAdded : IEvent
         var inventoryStateData = (InventoryStateData)stateData;
         foreach (var inventoryItem in InventoryItems)
         {
-            if (InventoryContainsItem(inventoryStateData, inventoryItem))
+            if (!InventoryContainsItem(inventoryStateData, inventoryItem))
                 inventoryStateData.InventoryItems.Add(inventoryItem.Id, inventoryItem);
             else
                 inventoryStateData.InventoryItems[inventoryItem.Id].Counter +=

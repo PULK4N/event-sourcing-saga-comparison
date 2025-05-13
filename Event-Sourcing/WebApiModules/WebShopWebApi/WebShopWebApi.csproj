@@ -17,10 +17,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\EventSourcingCoreModules\Core\Core.csproj" />
-    <ProjectReference Include="..\..\EventSourcingCoreModules\Models\Models.csproj" />
     <ProjectReference Include="..\..\EventSourcingCoreModules\Persistence\Persistence.csproj" />
     <ProjectReference Include="..\..\MediatRActionModules\ActionImplementations\ActionImplementations.csproj" />
     <ProjectReference Include="..\..\MediatRActionModules\ActionModels\ActionModels.csproj" />
+    <ProjectReference Include="..\..\DomainModules\InventoryModule\InventoryModule.csproj" />
+    <ProjectReference Include="..\..\DomainModules\OrderModule\OrderModule.csproj" />
+    <ProjectReference Include="..\..\DomainModules\PaymentModule\PaymentModule.csproj" />
+    <ProjectReference Include="..\..\DomainModules\ShippingModule\ShippingModule.csproj" />
   </ItemGroup>
 
 </Project>

@@ -55,9 +55,9 @@ public class WeatherForecastController : BaseMediaRController
             .ToArray();
     }
 
-    [HttpPost("random-test")]
-    public async Task<TestDTO> Post([FromBody] TestCommand testCommand)
-    {
-        return await Execute<TestDTO>(testCommand);
-    }
+    // [HttpPost("random-test")]
+    // public async Task<TestDTO> Post([FromBody] TestCommand testCommand)
+    // {
+    //     return await Execute<TestDTO>(testCommand);
+    // }
 }

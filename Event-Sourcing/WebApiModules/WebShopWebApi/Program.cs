@@ -1,25 +1,29 @@
+using EventSourcing.Core;
 using EventSourcing.Persistence;
+using InventoryModule;
+using OrderModule;
+using PaymentModule;
+using ShippingModule;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+var a = new InventoryModule.Events.InvetoryCreated();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.RegisterEventSourcingPersistence(builder.Configuration);
+builder.Services.RegisterEventSourcingCoreInjection();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

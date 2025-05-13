@@ -16,7 +16,6 @@ public class OrderNumberHelperUnitTest
             var transferMoneyEventData = new TransferMoney() { MoneySent = 1000 };
 
             var payload = EventPayload.Create(
-                $"NewEventName{i}",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 "test-state-machine",
@@ -32,7 +31,6 @@ public class OrderNumberHelperUnitTest
             var transferMoneyEventData = new TransferMoney() { MoneySent = 1000 };
 
             var payload = EventPayload.Create(
-                $"NewEventName{i}",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 "test-state-machine",
@@ -60,7 +58,6 @@ public class OrderNumberHelperUnitTest
             var transferMoneyEventData = new TransferMoney() { MoneySent = 1000 };
 
             var payload = EventPayload.Create(
-                $"NewEventName{i}",
                 Guid.NewGuid(),
                 Guid.NewGuid(),
                 "test-state-machine",

@@ -56,11 +56,17 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("EventSourcing.Persistence.Models.SerializedPayloadMessage", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<Guid>("AggregateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ExecutionAttempts")
+                        .HasColumnType("int");
 
                     b.Property<string>("SerializedPayloadMessageData")
                         .HasColumnType("nvarchar(max)");
