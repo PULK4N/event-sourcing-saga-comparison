@@ -2,6 +2,7 @@ using CommunicationModule;
 using CommunicationModule.Config;
 using CommunicationModule.Interfaces;
 using InventoryImplementationModule;
+using InventoryModule;
 using Microsoft.EntityFrameworkCore;
 
 internal class Program
@@ -17,6 +18,8 @@ internal class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddScoped<InventoryRepository>();
+        builder.Services.AddHostedService<KafkaMessageReceiverBackgroundService>();
 
         builder
             .Services

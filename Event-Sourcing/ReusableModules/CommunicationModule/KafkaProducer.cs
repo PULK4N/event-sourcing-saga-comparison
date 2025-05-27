@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using CommunicationModule.Config;
@@ -5,6 +6,7 @@ using CommunicationModule.Interfaces;
 using Confluent.Kafka;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace CommunicationModule;
 
@@ -64,6 +66,9 @@ public class KafkaProducer<TValue> : IMessageProducer<TValue>, IDisposable
 
 public class ValueJsonSerializer<T> : ISerializer<T>
 {
-    public byte[] Serialize(T data, SerializationContext ctx) =>
-        JsonSerializer.SerializeToUtf8Bytes(data);
+    public byte[] Serialize(T data, SerializationContext ctx)
+    {
+        var serializedData = JsonConvert.SerializeObject(data);
+        return Encoding.ASCII.GetBytes(serializedData);
+    }
 }

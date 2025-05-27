@@ -22,7 +22,7 @@ namespace ShippingImplementationModule
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await _messageConsumer.ConsumeAsync(
-                "inventory-state-machine",
+                "shipment-state-machine",
                 async (key, value) =>
                 {
                     using var scope = _serviceProvider.CreateScope();

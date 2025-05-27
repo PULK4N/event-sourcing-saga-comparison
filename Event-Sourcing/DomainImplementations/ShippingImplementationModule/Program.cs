@@ -18,6 +18,7 @@ internal class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
+        builder.Services.AddScoped<ShipmentRepository>();
         builder
             .Services
             .Configure<KafkaConsumerConfig>(
@@ -26,6 +27,7 @@ internal class Program
         builder
             .Services
             .AddSingleton<IMessageConsumer<string, string>, KafkaConsumer<string, string>>();
+        builder.Services.AddHostedService<KafkaMessageReceiverBackgroundService>();
 
         var connectionString = builder.Configuration.GetConnectionString("ApplicationDatabase");
         var contextOptions = new DbContextOptionsBuilder<ApplicationDbContext>();

@@ -64,35 +64,34 @@ namespace EventSourcing.Core
         // Stores it in ImpersonateModule
         // But since we have the same executor, how do we know that he executed it?
         // We can since it's from the SAME SCOPE, and impersonating instance is registered as SCOPED.
-        private async Task<StateInfo> GenerateStateInfo(
+        public async Task<StateInfo> GenerateStateInfo(
             Guid aggregateId,
             IEnumerable<EventPayload> existingEvents,
             IEnumerable<EventPayload> aggregateEventsToExecute
         )
         {
-            var firstEventData = aggregateEventsToExecute.First();
-            var stateMachineId = firstEventData.EventExecutionInfo.StateMachineId;
-
-            var emptyStateData = await _stateDataProvider.GetStateDataByStateMachine(
-                stateMachineId
-            );
-
             _orderNumberHelper.AssignOrderNumbers(existingEvents, aggregateEventsToExecute);
 
-            var initialStateInfo = StateInfo.Create(emptyStateData, stateMachineId, aggregateId);
+            var events = existingEvents
+                .Concat(aggregateEventsToExecute)
+                .OrderBy(x => x.EventExecutionInfo.OrderNumber);
 
-            var existingStateInfo = await GetStateInfo(initialStateInfo, existingEvents);
-            var newStateInfo = await GetStateInfo(existingStateInfo, aggregateEventsToExecute);
-
-            return newStateInfo;
+            return await Calculate(events);
         }
 
-        private async Task<StateInfo> GetStateInfo(
-            StateInfo stateInfo,
-            IEnumerable<EventPayload> eventPayloads
-        )
+        public async Task<StateInfo> Calculate(IEnumerable<EventPayload> eventPayloads)
         {
-            var stateData = stateInfo.StateData;
+            var firstEventData = eventPayloads.First();
+            var stateMachineId = firstEventData.EventExecutionInfo.StateMachineId;
+
+            var stateData = await _stateDataProvider.GetStateDataByStateMachine(stateMachineId);
+
+            var stateInfo = StateInfo.Create(
+                stateData,
+                stateMachineId,
+                firstEventData.EventExecutionInfo.AggregateId
+            );
+
             foreach (var payload in eventPayloads)
             {
                 stateData = payload.EventData.Apply(stateData, payload.EventExecutionInfo);

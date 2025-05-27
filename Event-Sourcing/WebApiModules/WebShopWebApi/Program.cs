@@ -7,6 +7,7 @@ using EventSourcing.Shared.Models;
 using InventoryModule;
 using OrderModule;
 using PaymentModule;
+using ShippingModule;
 using WebShopWebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,10 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
-var a = new InventoryModule.Events.InvetoryCreated();
 var b = new InventoryStateData();
 var c = new OrderStateData();
 var d = new PaymentStateData();
+var l = new ShipmentStateData();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -29,7 +30,9 @@ builder.Services.AddHostedService<OutboxBackgroundService>();
 
 var kafkaConfig = builder.Configuration.GetSection("KafkaProducerConfig");
 builder.Services.Configure<KafkaProducerConfig>(kafkaConfig);
-builder.Services.AddSingleton<IMessageProducer<EventPayload>, KafkaProducer<EventPayload>>();
+builder
+    .Services
+    .AddSingleton<IMessageProducer<ISharedStateData>, KafkaProducer<ISharedStateData>>();
 
 var app = builder.Build();
 

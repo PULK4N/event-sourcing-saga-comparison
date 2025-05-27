@@ -17,6 +17,7 @@ internal class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        builder.Services.AddScoped<OrderRepository>();
 
         builder
             .Services
@@ -26,6 +27,7 @@ internal class Program
         builder
             .Services
             .AddSingleton<IMessageConsumer<string, string>, KafkaConsumer<string, string>>();
+        builder.Services.AddHostedService<KafkaMessageReceiverBackgroundService>();
 
         var connectionString = builder.Configuration.GetConnectionString("ApplicationDatabase");
         var contextOptions = new DbContextOptionsBuilder<ApplicationDbContext>();

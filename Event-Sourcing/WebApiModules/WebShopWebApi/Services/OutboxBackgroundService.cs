@@ -1,4 +1,5 @@
 using CommunicationModule.Interfaces;
+using EventSourcing.Core;
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Shared.Models;
 
@@ -6,12 +7,12 @@ namespace WebShopWebApi.Services;
 
 public class OutboxBackgroundService : BackgroundService
 {
-    private readonly IMessageProducer<EventPayload> _messageProducer;
+    private readonly IMessageProducer<ISharedStateData> _messageProducer;
     private readonly ILogger<OutboxBackgroundService> _logger;
     private readonly IServiceProvider _serviceProvider;
 
     public OutboxBackgroundService(
-        IMessageProducer<EventPayload> messageProducer,
+        IMessageProducer<ISharedStateData> messageProducer,
         ILogger<OutboxBackgroundService> logger,
         IServiceProvider serviceProvider
     )
@@ -25,24 +26,35 @@ public class OutboxBackgroundService : BackgroundService
     {
         while (true)
         {
+            await Task.Delay(100);
+
             using var scope = _serviceProvider.CreateScope();
             var eventStoreWithOutbox = scope.ServiceProvider.GetService<IEventStoreWithOutbox>();
+            var steteMachineHandler = scope.ServiceProvider.GetService<StateMachineHandler>();
             if (eventStoreWithOutbox is null)
                 throw new Exception("Unable to instantiate event store");
 
             var message = await eventStoreWithOutbox.GetLatestMessage();
-
             if (message is null)
+                continue;
+            var eventsDict = await eventStoreWithOutbox.GetEventsByAggregate(
+                message.Payload.EventExecutionInfo.AggregateId
+            );
+            var events = eventsDict.SelectMany(x => x.Value);
+            if (!events.Any())
                 continue;
 
             try
             {
+                var stateInfo = await steteMachineHandler.Calculate(events);
+
+                if (stateInfo.StateData is not ISharedStateData stateData)
+                    continue;
                 await _messageProducer.ProduceAsync(
                     message.Payload.EventExecutionInfo.StateMachineId,
                     message.Payload.EventExecutionInfo.AggregateId.ToString(),
-                    message.Payload
+                    stateData
                 );
-
                 await eventStoreWithOutbox.UpdateCompleted(message.Id);
             }
             catch (Exception e)
