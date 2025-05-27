@@ -8,14 +8,14 @@ using Microsoft.Extensions.Options;
 
 namespace CommunicationModule;
 
-public class KafkaProducer<TKey, TValue> : IMessageProducer<TKey, TValue>, IDisposable
+public class KafkaProducer<TValue> : IMessageProducer<TValue>, IDisposable
 {
-    private readonly IProducer<TKey, TValue> _producer;
-    private readonly ILogger<KafkaProducer<TKey, TValue>> _logger;
+    private readonly IProducer<string, TValue> _producer;
+    private readonly ILogger<KafkaProducer<TValue>> _logger;
 
     public KafkaProducer(
         IOptions<KafkaProducerConfig> config,
-        ILogger<KafkaProducer<TKey, TValue>> logger
+        ILogger<KafkaProducer<TValue>> logger
     )
     {
         var producerConfig = new ProducerConfig
@@ -23,29 +23,27 @@ public class KafkaProducer<TKey, TValue> : IMessageProducer<TKey, TValue>, IDisp
             BootstrapServers = config.Value.BootstrapServers
         };
 
-        var builder = new ProducerBuilder<TKey, TValue>(producerConfig)
-            // string → UTF8 bytes
-            .SetKeySerializer(new ValueJsonSerializer<TKey>())
-            // EventPayload → JSON bytes
+        var builder = new ProducerBuilder<string, TValue>(producerConfig)
+            .SetKeySerializer(Serializers.Utf8)
             .SetValueSerializer(new ValueJsonSerializer<TValue>());
 
         _producer = builder.Build();
         _logger = logger;
     }
 
-    public async Task ProduceAsync(string topic, TKey key, TValue value)
+    public async Task ProduceAsync(string topic, string key, TValue value)
     {
         try
         {
             var deliveryResult = await _producer.ProduceAsync(
                 topic,
-                new Message<TKey, TValue> { Key = key, Value = value }
+                new Message<string, TValue> { Key = key, Value = value }
             );
             _logger.LogInformation(
                 $"Message sent to topic {topic}, partition {deliveryResult.Partition}, offset {deliveryResult.Offset}"
             );
         }
-        catch (ProduceException<TKey, TValue> ex)
+        catch (ProduceException<string, TValue> ex)
         {
             _logger.LogError($"Error producing message to Kafka: {ex.Error.Reason}");
             throw ex;

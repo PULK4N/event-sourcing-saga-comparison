@@ -1,6 +1,6 @@
 namespace CommunicationModule.Interfaces;
 
-public interface IMessageProducer<TKey, TValue>
+public interface IMessageProducer<TValue>
 {
-    Task ProduceAsync(string topic, TKey key, TValue value);
+    Task ProduceAsync(string topic, string key, TValue value);
 }

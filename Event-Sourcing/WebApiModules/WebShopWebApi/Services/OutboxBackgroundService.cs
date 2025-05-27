@@ -6,12 +6,12 @@ namespace WebShopWebApi.Services;
 
 public class OutboxBackgroundService : BackgroundService
 {
-    private readonly IMessageProducer<string, EventPayload> _messageProducer;
+    private readonly IMessageProducer<EventPayload> _messageProducer;
     private readonly ILogger<OutboxBackgroundService> _logger;
     private readonly IServiceProvider _serviceProvider;
 
     public OutboxBackgroundService(
-        IMessageProducer<string, EventPayload> messageProducer,
+        IMessageProducer<EventPayload> messageProducer,
         ILogger<OutboxBackgroundService> logger,
         IServiceProvider serviceProvider
     )
@@ -39,7 +39,7 @@ public class OutboxBackgroundService : BackgroundService
             {
                 await _messageProducer.ProduceAsync(
                     message.Payload.EventExecutionInfo.StateMachineId,
-                    message.Payload.EventExecutionInfo.AssemblyQualifiedEventName,
+                    message.Payload.EventExecutionInfo.AggregateId.ToString(),
                     message.Payload
                 );
 

@@ -7,7 +7,6 @@ using EventSourcing.Shared.Models;
 using InventoryModule;
 using OrderModule;
 using PaymentModule;
-using ShippingModule;
 using WebShopWebApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,9 +29,7 @@ builder.Services.AddHostedService<OutboxBackgroundService>();
 
 var kafkaConfig = builder.Configuration.GetSection("KafkaProducerConfig");
 builder.Services.Configure<KafkaProducerConfig>(kafkaConfig);
-builder
-    .Services
-    .AddSingleton<IMessageProducer<string, EventPayload>, KafkaProducer<string, EventPayload>>();
+builder.Services.AddSingleton<IMessageProducer<EventPayload>, KafkaProducer<EventPayload>>();
 
 var app = builder.Build();
 
