@@ -23,7 +23,7 @@ namespace OrderImplementationModule
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             await _messageConsumer.ConsumeAsync(
-                "inventory-state-machine",
+                "order-state-machine",
                 async (key, value) =>
                 {
                     using var scope = _serviceProvider.CreateScope();
@@ -33,6 +33,8 @@ namespace OrderImplementationModule
                     byte[] byteArray = Encoding.UTF8.GetBytes(value);
                     var stream = new MemoryStream(byteArray);
                     var item = await JsonSerializer.DeserializeAsync<OrderStateData>(stream);
+                    if (item is null)
+                        throw new NullReferenceException();
                     var order = new Order()
                     {
                         Id = item.Id,

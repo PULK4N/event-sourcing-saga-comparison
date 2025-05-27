@@ -1,6 +1,7 @@
 using System.Text;
 using System.Text.Json;
 using CommunicationModule.Interfaces;
+using InventoryImplementationModule.Models;
 using InventoryModule;
 
 namespace InventoryImplementationModule
@@ -32,7 +33,15 @@ namespace InventoryImplementationModule
                     byte[] byteArray = Encoding.UTF8.GetBytes(value);
                     var stream = new MemoryStream(byteArray);
                     var item = await JsonSerializer.DeserializeAsync<InventoryStateData>(stream);
-                    await repository.WriteDetails(item);
+                    if (item is null)
+                        throw new NullReferenceException();
+                    var inventory = new Inventory()
+                    {
+                        Id = item.Id,
+                        Name = item.Name,
+                        InventoryItems = item.InventoryItems.Values.ToList()
+                    };
+                    await repository.WriteDetails(inventory);
                 },
                 stoppingToken
             );

@@ -1,3 +1,4 @@
+using InventoryImplementationModule.Models;
 using InventoryModule;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,7 +13,7 @@ public class InventoryRepository
         _context = context;
     }
 
-    public async Task WriteDetails(InventoryStateData item)
+    public async Task WriteDetails(Inventory item)
     {
         var items = _context.Inventories.Where(x => x.Id == item.Id);
         _context.RemoveRange(items);
@@ -20,7 +21,7 @@ public class InventoryRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<InventoryStateData> ReadDetails(Guid id)
+    public async Task<Inventory> ReadDetails(Guid id)
     {
         return await _context.Inventories.FirstOrDefaultAsync(x => x.Id == id);
     }
