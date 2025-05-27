@@ -16,7 +16,8 @@ namespace EventSourcing.Persistence.Models
     {
         public long Id { get; set; }
         public Guid AggregateId { get; set; }
-        public string SerializedPayloadMessageData { get; set; }
+        public string SerializedEventExecutionInfo { get; set; }
+        public string SerializedEventData { get; set; }
         public int ExecutionAttempts { get; set; } = 0;
         public MessageStatus Status { get; set; } = MessageStatus.New;
 
@@ -27,7 +28,10 @@ namespace EventSourcing.Persistence.Models
         {
             var serilalizedPayload = new SerializedPayloadMessage();
 
-            serilalizedPayload.SerializedPayloadMessageData = JsonConvert.SerializeObject(payload);
+            serilalizedPayload.SerializedEventExecutionInfo = JsonConvert.SerializeObject(
+                payload.EventExecutionInfo
+            );
+            serilalizedPayload.SerializedEventData = JsonConvert.SerializeObject(payload.EventData);
             serilalizedPayload.AggregateId = payload.EventExecutionInfo.AggregateId;
 
             return serilalizedPayload;

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\DomainModules\ShippingModule\ShippingModule.csproj" />
+    <ProjectReference Include="..\..\EventSourcingCoreModules\Shared\Shared.csproj" />
   </ItemGroup>
 
 </Project>
