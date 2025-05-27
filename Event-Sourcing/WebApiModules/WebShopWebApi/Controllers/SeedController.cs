@@ -3,6 +3,8 @@ using EventSourcing.Shared.Models;
 using InventoryModule.Events;
 using InventoryModule.Models;
 using Microsoft.AspNetCore.Mvc;
+using OrderModule.Events;
+using OrderModule.Models;
 
 namespace WebShopWebApi.Controllers;
 
@@ -23,18 +25,19 @@ public class SeedController : ControllerBase
     [HttpPost]
     public async Task<object> SeedItems([FromServices] StateMachineHandler stateMachineHandler)
     {
-        var executor = Guid.Empty;
-        var inventoryId = Guid.Parse("00000000-0000-0000-0000-000000000001");
         var events = new List<EventPayload>();
 
         var invetoryCreated = new InvetoryCreated() { Name = "Test Inventory", };
 
         var createInventory = EventPayload.Create(
-            executor,
-            inventoryId,
+            Constants.EXECUTOR_ID,
+            Constants.INVENTORY_ID,
             "inventory-state-machine",
             invetoryCreated
         );
+
+        var item1Id = Guid.NewGuid();
+        var item2Id = Guid.NewGuid();
 
         var inventoryData = new InvetoryItemsAdded()
         {
@@ -43,13 +46,13 @@ public class SeedController : ControllerBase
                 new InventoryItem()
                 {
                     Name = "TestItem1",
-                    Id = Guid.NewGuid(),
+                    Id = item1Id,
                     Counter = 100
                 },
                 new InventoryItem()
                 {
                     Name = "TestItem2",
-                    Id = Guid.NewGuid(),
+                    Id = item2Id,
                     Counter = 200
                 },
                 new InventoryItem()
@@ -62,13 +65,58 @@ public class SeedController : ControllerBase
         };
 
         var addItemsToInventory = EventPayload.Create(
-            executor,
-            inventoryId,
+            Constants.EXECUTOR_ID,
+            Constants.INVENTORY_ID,
             "inventory-state-machine",
             inventoryData
         );
 
-        events.AddRange(new List<EventPayload>() { createInventory, addItemsToInventory });
+        var createOrder = EventPayload.Create(
+            Constants.EXECUTOR_ID,
+            Constants.ORDER_ID,
+            "order-state-machine",
+            new OrderCreated()
+        );
+
+        var orderItemsAdded = EventPayload.Create(
+            Constants.EXECUTOR_ID,
+            Constants.ORDER_ID,
+            "order-state-machine",
+            new OrderItemAdded()
+            {
+                OrderItem = new OrderItem()
+                {
+                    Id = item1Id,
+                    Price = 100,
+                    Amount = 50
+                }
+            }
+        );
+        var orderItemsAdded2 = EventPayload.Create(
+            Constants.EXECUTOR_ID,
+            Constants.ORDER_ID,
+            "order-state-machine",
+            new OrderItemAdded()
+            {
+                OrderItem = new OrderItem()
+                {
+                    Id = item2Id,
+                    Price = 200,
+                    Amount = 200
+                }
+            }
+        );
+
+        events.AddRange(
+            new List<EventPayload>()
+            {
+                createInventory,
+                addItemsToInventory,
+                createOrder,
+                orderItemsAdded,
+                orderItemsAdded2
+            }
+        );
 
         var result = await stateMachineHandler.ExecuteEvents(events.ToArray());
         return result;
