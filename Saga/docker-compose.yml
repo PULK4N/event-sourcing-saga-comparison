@@ -16,78 +16,12 @@ services:
       - "9092:9092"
     environment:
       DOCKER_API_VERSION: 1.24
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092,EXTERNAL://localhost:9092
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_CREATE_TOPICS: "saga-transaction-start:1:1,account-debit-request:1:1,account-debit-response:1:1,account-credit-request:1:1,account-credit-response:1:1,transaction-complete:1:1,transaction-compensate:1:1,notification-events:1:1,testSendingDataFromSaga:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
-    networks:
-      - kafka-network
-
-
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.10.2
-    container_name: elasticsearch
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - xpack.security.http.ssl.enabled=false
-      - xpack.security.transport.ssl.enabled=false
-      - ES_JAVA_OPTS=-Xms1g -Xmx1g
-    ports:
-      - "9200:9200"
-    networks:
-      - kafka-network
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.10.2
-    container_name: kibana
-    depends_on:
-      - elasticsearch
-    ports:
-      - "5601:5601"
-    environment:
-      ELASTICSEARCH_HOSTS: http://elasticsearch:9200
-    networks:
-      - kafka-network
-
-  connect:
-    image: confluentinc/cp-kafka-connect:7.5.0
-    container_name: kafka-connect
-    depends_on:
-      - broker
-      - elasticsearch
-    ports:
-      - "8083:8083"
-    environment:
-      CONNECT_BOOTSTRAP_SERVERS: "broker:9092"
-      CONNECT_REST_PORT: 8083
-      CONNECT_GROUP_ID: "1"
-      CONNECT_CONFIG_STORAGE_TOPIC: "connect-configs"
-      CONNECT_OFFSET_STORAGE_TOPIC: "connect-offsets"
-      CONNECT_STATUS_STORAGE_TOPIC: "connect-status"
-      CONNECT_CONFIG_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_OFFSET_STORAGE_REPLICATION_FACTOR: "1"
-      CONNECT_STATUS_STORAGE_REPLICATION_FACTOR: "1"
-
-      # Converters
-      CONNECT_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_INTERNAL_KEY_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-      CONNECT_INTERNAL_VALUE_CONVERTER: "org.apache.kafka.connect.json.JsonConverter"
-
-      # Plugin path (for installing custom connectors via Confluent Hub, or manual)
-      CONNECT_PLUGIN_PATH: "/usr/share/java,/usr/share/confluent-hub-components"
-
-      CONNECT_REST_ADVERTISED_HOST_NAME: "kafka-connect" 
-      # If you want to automatically install a connector via Confluent Hub, do:
-      # CONNECT_COMPONENTS_DIR: "/usr/share/confluent-hub-components"
-      # Then you can run something like:
-      command: >
-        bash -c "confluent-hub install --no-prompt confluentinc/kafka-connect-elasticsearch:latest && /etc/confluent/docker/run"
     networks:
       - kafka-network
 
