@@ -38,7 +38,9 @@ namespace EventSourcing.Core
                 var aggregateEventsToExecute = eventsToExecute.Where(
                     x => x.EventExecutionInfo.AggregateId == aggregateId
                 );
-                var existingEventsByAggregate = existingEvents[aggregateId].ToList();
+                var existingEventsByAggregate = existingEvents[aggregateId]
+                    .ToList()
+                    .OrderBy(x => x.EventExecutionInfo.OrderNumber);
 
                 var stateInfo = await GenerateStateInfo(
                     aggregateId,

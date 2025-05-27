@@ -5,17 +5,16 @@ using InventoryModule.Events;
 using OrderModule;
 using OrderModule.Events;
 using PaymentModule.Events;
-using ShippingModule.Events;
 using WebShopWebApi.Commands;
 using WebShopWebApi.DTOs;
 
 namespace WebShopWebApi.Handlers;
 
-public class PayForOrderHandler : CommandHanlder<PlaceOrder, OrderDTO>
+public class PlaceOrderHandler : CommandHanlder<PlaceOrder, OrderDTO>
 {
     private readonly StateMachineHandler _stateMachineHandler;
 
-    public PayForOrderHandler(StateMachineHandler stateMachineHandler)
+    public PlaceOrderHandler(StateMachineHandler stateMachineHandler)
     {
         _stateMachineHandler = stateMachineHandler;
     }
@@ -39,27 +38,18 @@ public class PayForOrderHandler : CommandHanlder<PlaceOrder, OrderDTO>
             new InvetoryItemsOrdered() { OrderId = Constants.ORDER_ID }
         );
 
-        var paymentSuccessful = EventPayload.Create(
+        var paymentStarted = EventPayload.Create(
             Constants.EXECUTOR_ID,
             Constants.PAYMENT_ID,
             Constants.PAYMENT_STATE_MACHINE,
-            new PaymentSuccessful() { }
-        );
-
-        var shipmentStarted = EventPayload.Create(
-            Constants.EXECUTOR_ID,
-            Constants.SHIPMENT_ID,
-            Constants.SHIPMENT_STATE_MACHINE,
-            new ShipmentCreated() { }
+            new PaymentInitiated() { OrderId = Constants.ORDER_ID, Amount = 200 * 200 + 50 * 100 }
         );
 
         var result = await _stateMachineHandler.ExecuteEvents(
             orderPlacedPayload,
             inventoryItemsOrdered,
-            paymentSuccessful,
-            shipmentStarted
+            paymentStarted
         );
-
         var orderStateData = (OrderStateData)result[Constants.ORDER_ID].StateData;
 
         return new OrderDTO()

@@ -1,3 +1,6 @@
+using ActionImplementations;
+using WebShopWebApi.DTOs;
+
 namespace WebShopWebApi.Commands;
 
-public class PayForTheOrder { }
+public class PayForTheOrder : Command<OrderDTO> { }

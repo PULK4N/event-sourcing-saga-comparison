@@ -1,5 +1,6 @@
 using EventSourcing.Core.Interfaces;
 using EventSourcing.Persistence.Models;
+using EventSourcing.Shared.Interfaces;
 using EventSourcing.Shared.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -25,21 +26,52 @@ public class EventStoreWithOutbox : IEventStoreWithOutbox
             .AsNoTracking()
             .ToListAsync();
 
-        var payloads = serializedPayloads.Select(
-            x => JsonConvert.DeserializeObject<EventPayload>(x.SerializedJsonData)
-        );
+        var payloads = serializedPayloads.Select(Deserialize);
 
         var eventsDictionary = new Dictionary<Guid, EventPayload[]>();
 
         foreach (var aggregateId in AggregateIds)
         {
-            var aggregateEvents = payloads.Where(
-                x => x.EventExecutionInfo.AggregateId == aggregateId
-            );
-            eventsDictionary.Add(aggregateId, aggregateEvents.ToArray());
+            var aggregateEvents = payloads
+                .Where(x => x.EventExecutionInfo.AggregateId == aggregateId)
+                .ToArray();
+            eventsDictionary.Add(aggregateId, aggregateEvents);
         }
 
         return eventsDictionary;
+    }
+
+    private EventPayload Deserialize(SerializedEventPayload serializedPayload)
+    {
+        var payload = new EventPayload()
+        {
+            EventExecutionInfo = new EventExecutionInfo()
+            {
+                AggregateId = serializedPayload.AggregateId,
+                EventExecutor = serializedPayload.EventExecutor,
+                EventName = serializedPayload.EventName,
+                AssemblyQualifiedEventName = serializedPayload.AssemblyQualifiedEventName,
+                Id = serializedPayload.Id,
+                OrderNumber = serializedPayload.OrderNumber,
+                StateMachineId = serializedPayload.StateMachineId,
+                Timestamp = serializedPayload.Timestamp
+            }
+        };
+
+        var eventType = AppDomain
+            .CurrentDomain
+            .GetAssemblies()
+            .SelectMany(a => a.GetTypes())
+            .FirstOrDefault(
+                x => x.AssemblyQualifiedName == serializedPayload.AssemblyQualifiedEventName
+            );
+
+        var eventData = (IEvent)
+            JsonConvert.DeserializeObject(serializedPayload.SerializedJsonData, eventType);
+
+        payload.EventData = eventData;
+
+        return payload;
     }
 
     public async Task WriteEventsWithOutbox(params EventPayload[] payloads)

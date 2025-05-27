@@ -13,6 +13,7 @@ builder.Services.AddControllers();
 var a = new InventoryModule.Events.InvetoryCreated();
 var b = new InventoryStateData();
 var c = new OrderStateData();
+var d = new PaymentStateData();
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

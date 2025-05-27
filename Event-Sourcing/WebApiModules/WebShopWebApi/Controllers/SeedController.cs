@@ -32,32 +32,32 @@ public class SeedController : ControllerBase
         var createInventory = EventPayload.Create(
             Constants.EXECUTOR_ID,
             Constants.INVENTORY_ID,
-            "inventory-state-machine",
+            Constants.INVENTORY_STATE_MACHINE,
             invetoryCreated
         );
 
         var item1Id = Guid.NewGuid();
         var item2Id = Guid.NewGuid();
 
-        var inventoryData = new InvetoryItemsAdded()
+        var inventoryItemsAdded = new InvetoryItemsAdded()
         {
             InventoryItems = new List<InventoryItem>()
             {
                 new InventoryItem()
                 {
-                    Name = "TestItem1",
+                    Name = "Laptop",
                     Id = item1Id,
                     Counter = 100
                 },
                 new InventoryItem()
                 {
-                    Name = "TestItem2",
+                    Name = "Keyboard",
                     Id = item2Id,
                     Counter = 200
                 },
                 new InventoryItem()
                 {
-                    Name = "TestItem3",
+                    Name = "Random",
                     Id = Guid.NewGuid(),
                     Counter = 300
                 }
@@ -67,26 +67,27 @@ public class SeedController : ControllerBase
         var addItemsToInventory = EventPayload.Create(
             Constants.EXECUTOR_ID,
             Constants.INVENTORY_ID,
-            "inventory-state-machine",
-            inventoryData
+            Constants.INVENTORY_STATE_MACHINE,
+            inventoryItemsAdded
         );
 
         var createOrder = EventPayload.Create(
             Constants.EXECUTOR_ID,
             Constants.ORDER_ID,
-            "order-state-machine",
+            Constants.ORDER_STATE_MACHINE,
             new OrderCreated()
         );
 
         var orderItemsAdded = EventPayload.Create(
             Constants.EXECUTOR_ID,
             Constants.ORDER_ID,
-            "order-state-machine",
+            Constants.ORDER_STATE_MACHINE,
             new OrderItemAdded()
             {
                 OrderItem = new OrderItem()
                 {
                     Id = item1Id,
+                    Name = "Laptop",
                     Price = 100,
                     Amount = 50
                 }
@@ -95,14 +96,30 @@ public class SeedController : ControllerBase
         var orderItemsAdded2 = EventPayload.Create(
             Constants.EXECUTOR_ID,
             Constants.ORDER_ID,
-            "order-state-machine",
+            Constants.ORDER_STATE_MACHINE,
             new OrderItemAdded()
             {
                 OrderItem = new OrderItem()
                 {
                     Id = item2Id,
+                    Name = "Keyboard",
                     Price = 200,
                     Amount = 200
+                }
+            }
+        );
+
+        var inventoryReserved = EventPayload.Create(
+            Constants.EXECUTOR_ID,
+            Constants.INVENTORY_ID,
+            Constants.INVENTORY_STATE_MACHINE,
+            new InvetoryItemsReserved()
+            {
+                OrderId = Constants.ORDER_ID,
+                ReservedItems = new List<InventoryItem>()
+                {
+                    new InventoryItem() { Id = item1Id, Counter = 50 },
+                    new InventoryItem() { Id = item2Id, Counter = 200 }
                 }
             }
         );
@@ -110,11 +127,12 @@ public class SeedController : ControllerBase
         events.AddRange(
             new List<EventPayload>()
             {
-                createInventory,
-                addItemsToInventory,
                 createOrder,
                 orderItemsAdded,
-                orderItemsAdded2
+                orderItemsAdded2,
+                createInventory,
+                addItemsToInventory,
+                inventoryReserved
             }
         );
 
