@@ -12,8 +12,14 @@ public class OrderController : BaseMediaRController
         : base(mediator) { }
 
     [HttpPost("place-order")]
-    public async Task<TestDTO> PlaceOrder([FromBody] TestCommand testCommand)
+    public async Task<OrderDTO> PlaceOrder([FromBody] PlaceOrder command)
     {
-        return await Execute<TestDTO>(testCommand);
+        return await Execute<OrderDTO>(command);
+    }
+
+    [HttpPost("pay-order")]
+    public async Task<OrderDTO> PayOrder([FromBody] PayForTheOrder command)
+    {
+        return await Execute<OrderDTO>(command);
     }
 }

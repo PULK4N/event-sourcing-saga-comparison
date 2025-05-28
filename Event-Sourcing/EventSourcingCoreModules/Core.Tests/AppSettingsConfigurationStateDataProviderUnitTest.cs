@@ -42,7 +42,6 @@ public class AppSettingsConfigurationStateDataProviderUnitTest
         var transferMoneyEventData = new TransferMoney() { MoneySent = 1000 };
 
         var payload = EventPayload.Create(
-            "RandomEvent1",
             Guid.NewGuid(),
             Guid.NewGuid(),
             "test-state-machine",
@@ -88,7 +87,6 @@ public class AppSettingsConfigurationStateDataProviderUnitTest
         var transferMoneyEventData = new TransferMoney() { MoneySent = 1000 };
 
         var payload = EventPayload.Create(
-            "RandomEvent1",
             Guid.NewGuid(),
             Guid.NewGuid(),
             "test-state-machine",
@@ -138,7 +136,6 @@ public class AppSettingsConfigurationStateDataProviderUnitTest
         var transferMoneyEventData = new TransferMoney() { MoneySent = 1000 };
 
         var payload = EventPayload.Create(
-            "RandomEvent1",
             Guid.NewGuid(),
             Guid.NewGuid(),
             "test-state-machine",

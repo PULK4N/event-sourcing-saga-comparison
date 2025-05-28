@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(EventSourcingDbContext))]
-    [Migration("20250429121846_EventSourcingCore")]
-    partial class EventSourcingCore
+    [Migration("20250527115749_AssemnlyEventName")]
+    partial class AssemnlyEventName
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,6 +32,9 @@ namespace Persistence.Migrations
 
                     b.Property<Guid>("AggregateId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("AssemblyQualifiedEventName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid>("EventExecutor")
                         .HasColumnType("uniqueidentifier");
@@ -58,17 +61,28 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("EventSourcing.Persistence.Models.SerializedPayloadMessage", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<Guid>("AggregateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ExecutionAttempts")
+                        .HasColumnType("int");
 
                     b.Property<string>("SerializedPayloadMessageData")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.HasKey("Id");
 

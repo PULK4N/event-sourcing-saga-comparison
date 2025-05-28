@@ -34,3 +34,13 @@
 ## Utils [Last]
 - Contains any kind of utils for every module to use.
 - Is not integrated with anything like database or something like that.
+
+1. With having selected items:
+- Check Inventories and reserve
+- Place an Order
+- -- Ask user to pay
+
+2. When user pays:
+- Save payment order data
+- Subtract from the reservation in the inventory
+- Begin shipment

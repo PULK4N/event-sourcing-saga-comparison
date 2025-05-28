@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationModule", "CommunicationModule\CommunicationModule.csproj", "{D66D4908-D714-4647-80DC-DFFE8E1B7322}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EventSourcingCoreModules", "EventSourcingCoreModules", "{9528FBDE-5BBA-4DE9-AA0D-EA2A806F0567}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "EventSourcingCoreModules\Core\Core.csproj", "{4224163D-CC7B-4CBF-916B-047656E758FF}"
@@ -35,6 +33,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentModule", "DomainModu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingModule", "DomainModules\ShippingModule\ShippingModule.csproj", "{F5CD120C-30A5-452E-B8C2-CE504C534A7C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ReusableModules", "ReusableModules", "{DC703E02-1D4D-45D1-AB82-C95CB73364EC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommunicationModule", "ReusableModules\CommunicationModule\CommunicationModule.csproj", "{D3270D0A-2FDB-4B05-B065-3DB5D027DDCF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DomainImplementations", "DomainImplementations", "{695D2EC2-ECCC-4C14-9EFB-0A95726C5D42}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InventoryImplementationModule", "DomainImplementations\InventoryImplementationModule\InventoryImplementationModule.csproj", "{50CDCF14-BDA6-435B-83F5-6D0CABDA2D68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderImplementationModule", "DomainImplementations\OrderImplementationModule\OrderImplementationModule.csproj", "{A5DCC661-DC12-481D-B9E2-47EEAB62027F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingImplementationModule", "DomainImplementations\ShippingImplementationModule\ShippingImplementationModule.csproj", "{807E9BB4-62FC-4B8D-86DF-3A30F67B884C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,10 +54,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D66D4908-D714-4647-80DC-DFFE8E1B7322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D66D4908-D714-4647-80DC-DFFE8E1B7322}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D66D4908-D714-4647-80DC-DFFE8E1B7322}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D66D4908-D714-4647-80DC-DFFE8E1B7322}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4224163D-CC7B-4CBF-916B-047656E758FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4224163D-CC7B-4CBF-916B-047656E758FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4224163D-CC7B-4CBF-916B-047656E758FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -92,6 +98,22 @@ Global
 		{F5CD120C-30A5-452E-B8C2-CE504C534A7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5CD120C-30A5-452E-B8C2-CE504C534A7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5CD120C-30A5-452E-B8C2-CE504C534A7C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3270D0A-2FDB-4B05-B065-3DB5D027DDCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3270D0A-2FDB-4B05-B065-3DB5D027DDCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3270D0A-2FDB-4B05-B065-3DB5D027DDCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3270D0A-2FDB-4B05-B065-3DB5D027DDCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50CDCF14-BDA6-435B-83F5-6D0CABDA2D68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50CDCF14-BDA6-435B-83F5-6D0CABDA2D68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50CDCF14-BDA6-435B-83F5-6D0CABDA2D68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50CDCF14-BDA6-435B-83F5-6D0CABDA2D68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5DCC661-DC12-481D-B9E2-47EEAB62027F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5DCC661-DC12-481D-B9E2-47EEAB62027F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5DCC661-DC12-481D-B9E2-47EEAB62027F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5DCC661-DC12-481D-B9E2-47EEAB62027F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{807E9BB4-62FC-4B8D-86DF-3A30F67B884C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{807E9BB4-62FC-4B8D-86DF-3A30F67B884C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{807E9BB4-62FC-4B8D-86DF-3A30F67B884C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{807E9BB4-62FC-4B8D-86DF-3A30F67B884C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4224163D-CC7B-4CBF-916B-047656E758FF} = {9528FBDE-5BBA-4DE9-AA0D-EA2A806F0567}
@@ -105,5 +127,9 @@ Global
 		{8C76F922-58E3-438A-8185-36B639E8C8D5} = {BC9A7175-0ADE-44C8-81A2-592C5BC3F409}
 		{19ACBBF3-F7CE-4E11-9C5C-46A1EBE49A78} = {BC9A7175-0ADE-44C8-81A2-592C5BC3F409}
 		{F5CD120C-30A5-452E-B8C2-CE504C534A7C} = {BC9A7175-0ADE-44C8-81A2-592C5BC3F409}
+		{D3270D0A-2FDB-4B05-B065-3DB5D027DDCF} = {DC703E02-1D4D-45D1-AB82-C95CB73364EC}
+		{50CDCF14-BDA6-435B-83F5-6D0CABDA2D68} = {695D2EC2-ECCC-4C14-9EFB-0A95726C5D42}
+		{A5DCC661-DC12-481D-B9E2-47EEAB62027F} = {695D2EC2-ECCC-4C14-9EFB-0A95726C5D42}
+		{807E9BB4-62FC-4B8D-86DF-3A30F67B884C} = {695D2EC2-ECCC-4C14-9EFB-0A95726C5D42}
 	EndGlobalSection
 EndGlobal

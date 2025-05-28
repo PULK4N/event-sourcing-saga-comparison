@@ -31,6 +31,9 @@ namespace Persistence.Migrations
                     b.Property<Guid>("AggregateId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<string>("AssemblyQualifiedEventName")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<Guid>("EventExecutor")
                         .HasColumnType("uniqueidentifier");
 
@@ -56,17 +59,31 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("EventSourcing.Persistence.Models.SerializedPayloadMessage", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                    b.Property<Guid>("AggregateId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("ExecutionAttempts")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    b.Property<string>("SerializedEventData")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SerializedPayloadMessageData")
+                    b.Property<string>("SerializedEventExecutionInfo")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
+
+                    b.Property<byte[]>("Version")
+                        .IsConcurrencyToken()
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("rowversion");
 
                     b.HasKey("Id");
 

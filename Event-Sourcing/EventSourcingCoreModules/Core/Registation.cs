@@ -20,10 +20,7 @@ namespace EventSourcing.Core
             // services.RegisterHookTypes();
             services.AddScoped<IEventValidatorProvider, DefaultEventValidatorProvider>();
 
-            if (environmentName == "Development")
-                services.RegisterDevEnvironmentProviders();
-            else
-                services.RegisterProdEnvironmentProviders();
+            services.RegisterDevEnvironmentProviders();
 
             return services;
         }

@@ -4,13 +4,12 @@ namespace EventSourcing.Shared.Models
 {
     public class EventPayload
     {
-        private EventPayload() { }
+        public EventPayload() { }
 
         public EventExecutionInfo EventExecutionInfo { get; set; }
         public IEvent EventData { get; set; }
 
         public static EventPayload Create(
-            string name,
             Guid eventExecutor,
             Guid AggregateId,
             string stateMachineId,
@@ -21,7 +20,10 @@ namespace EventSourcing.Shared.Models
 
             payload.EventExecutionInfo = new EventExecutionInfo();
             payload.EventExecutionInfo.Id = Guid.NewGuid();
-            payload.EventExecutionInfo.EventName = name;
+            payload.EventExecutionInfo.EventName = eventData.GetType().Name;
+            payload.EventExecutionInfo.AssemblyQualifiedEventName = eventData
+                .GetType()
+                .AssemblyQualifiedName;
             payload.EventExecutionInfo.Timestamp = DateTime.UtcNow;
             payload.EventExecutionInfo.StateMachineId = stateMachineId;
             payload.EventExecutionInfo.EventExecutor = eventExecutor;

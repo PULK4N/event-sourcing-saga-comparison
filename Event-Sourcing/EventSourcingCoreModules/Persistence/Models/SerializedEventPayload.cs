@@ -11,6 +11,8 @@ namespace EventSourcing.Persistence.Models
         public uint OrderNumber { get; set; }
         public Guid EventExecutor { get; set; }
         public string EventName { get; set; } = string.Empty;
+
+        public string AssemblyQualifiedEventName { get; set; } = string.Empty;
         public string StateMachineId { get; set; } = string.Empty;
         public string SerializedJsonData { get; set; } = string.Empty;
 
@@ -24,6 +26,9 @@ namespace EventSourcing.Persistence.Models
             serilalizedPayload.OrderNumber = payload.EventExecutionInfo.OrderNumber;
             serilalizedPayload.EventExecutor = payload.EventExecutionInfo.EventExecutor;
             serilalizedPayload.EventName = payload.EventExecutionInfo.EventName;
+            serilalizedPayload.AssemblyQualifiedEventName = payload
+                .EventExecutionInfo
+                .AssemblyQualifiedEventName;
             serilalizedPayload.StateMachineId = payload.EventExecutionInfo.StateMachineId;
 
             serilalizedPayload.SerializedJsonData = JsonConvert.SerializeObject(payload.EventData);

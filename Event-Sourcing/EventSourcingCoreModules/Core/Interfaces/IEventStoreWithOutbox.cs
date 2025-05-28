@@ -7,5 +7,9 @@ namespace EventSourcing.Core.Interfaces
         Task<Dictionary<Guid, EventPayload[]>> GetEventsByAggregate(params Guid[] AggregateId);
 
         Task WriteEventsWithOutbox(params EventPayload[] payloads);
+        Task<MessagePayload> GetLatestMessage();
+        Task UpdateCompleted(long id);
+
+        Task UpdateFailed(long id);
     }
 }
