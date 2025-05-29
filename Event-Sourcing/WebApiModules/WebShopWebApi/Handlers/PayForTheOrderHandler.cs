@@ -25,18 +25,18 @@ public class PayForOrderHandler : CommandHanlder<PlaceOrder, OrderDTO>
         CancellationToken cancellationToken
     )
     {
-        var orderPlacedPayload = EventPayload.Create(
+        var orderSuccessful = EventPayload.Create(
             Constants.EXECUTOR_ID,
             Constants.ORDER_ID,
             Constants.ORDER_STATE_MACHINE,
-            new OrderPlaced()
+            new OrderSuccessful()
         );
 
-        var inventoryItemsOrdered = EventPayload.Create(
+        var inventoryItemsReserved = EventPayload.Create(
             Constants.EXECUTOR_ID,
             Constants.INVENTORY_ID,
             Constants.INVENTORY_STATE_MACHINE,
-            new InvetoryItemsOrdered() { OrderId = Constants.ORDER_ID }
+            new InvetoryItemsReserved() { OrderId = Constants.ORDER_ID }
         );
 
         var paymentSuccessful = EventPayload.Create(
@@ -54,8 +54,8 @@ public class PayForOrderHandler : CommandHanlder<PlaceOrder, OrderDTO>
         );
 
         var result = await _stateMachineHandler.ExecuteEvents(
-            orderPlacedPayload,
-            inventoryItemsOrdered,
+            orderSuccessful,
+            inventoryItemsReserved,
             paymentSuccessful,
             shipmentStarted
         );
