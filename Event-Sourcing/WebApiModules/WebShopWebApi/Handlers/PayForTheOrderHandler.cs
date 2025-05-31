@@ -32,11 +32,11 @@ public class PayForOrderHandler : CommandHanlder<PlaceOrder, OrderDTO>
             new OrderSuccessful()
         );
 
-        var inventoryItemsReserved = EventPayload.Create(
+        var invetoryItemsOrdered = EventPayload.Create(
             Constants.EXECUTOR_ID,
             Constants.INVENTORY_ID,
             Constants.INVENTORY_STATE_MACHINE,
-            new InvetoryItemsReserved() { OrderId = Constants.ORDER_ID }
+            new InvetoryItemsOrdered() { OrderId = Constants.ORDER_ID }
         );
 
         var paymentSuccessful = EventPayload.Create(
@@ -55,7 +55,7 @@ public class PayForOrderHandler : CommandHanlder<PlaceOrder, OrderDTO>
 
         var result = await _stateMachineHandler.ExecuteEvents(
             orderSuccessful,
-            inventoryItemsReserved,
+            invetoryItemsOrdered,
             paymentSuccessful,
             shipmentStarted
         );
