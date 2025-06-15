@@ -2,6 +2,7 @@ using CommunicationModule;
 using CommunicationModule.Config;
 using CommunicationModule.Interfaces;
 using EventSourcing.Core;
+using EventSourcing.Optimizations;
 using EventSourcing.Persistence;
 using EventSourcing.Shared.Models;
 using InventoryModule;
@@ -25,6 +26,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 builder.Services.RegisterEventSourcingPersistence(builder.Configuration);
+
+// Must be after persistence because of overrides
+builder.Services.RegisterEventSourcingOptmizations(builder.Configuration);
 builder.Services.RegisterEventSourcingCoreInjection();
 builder.Services.AddHostedService<OutboxBackgroundService>();
 

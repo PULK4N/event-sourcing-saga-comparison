@@ -11,14 +11,14 @@ namespace EventSourcing.Persistence;
 
 public class EventStoreWithOutbox : IEventStoreWithOutbox
 {
-    private readonly EventSourcingDbContext _applicationDbContext;
+    protected readonly EventSourcingDbContext _applicationDbContext;
 
     public EventStoreWithOutbox(EventSourcingDbContext applicationDbContext)
     {
         _applicationDbContext = applicationDbContext;
     }
 
-    public async Task<Dictionary<Guid, EventPayload[]>> GetEventsByAggregate(
+    public virtual async Task<Dictionary<Guid, EventPayload[]>> GetEventsByAggregate(
         params Guid[] AggregateIds
     )
     {
@@ -43,7 +43,7 @@ public class EventStoreWithOutbox : IEventStoreWithOutbox
         return eventsDictionary;
     }
 
-    private EventPayload Deserialize(SerializedEventPayload serializedPayload)
+    protected EventPayload Deserialize(SerializedEventPayload serializedPayload)
     {
         var payload = new EventPayload()
         {

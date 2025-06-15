@@ -25,6 +25,7 @@
     <ProjectReference Include="..\..\DomainModules\PaymentModule\PaymentModule.csproj" />
     <ProjectReference Include="..\..\DomainModules\ShippingModule\ShippingModule.csproj" />
     <ProjectReference Include="..\..\ReusableModules\CommunicationModule\CommunicationModule.csproj" />
+    <ProjectReference Include="..\..\EventSourcingCoreModules\Optimizations\Optimizations.csproj" />
   </ItemGroup>
 
 </Project>

@@ -45,6 +45,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderImplementationModule",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShippingImplementationModule", "DomainImplementations\ShippingImplementationModule\ShippingImplementationModule.csproj", "{807E9BB4-62FC-4B8D-86DF-3A30F67B884C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optimizations", "EventSourcingCoreModules\Optimizations\Optimizations.csproj", "{2CD4B0BC-DC34-42A2-89C4-45B4EBD02CB6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,10 @@ Global
 		{807E9BB4-62FC-4B8D-86DF-3A30F67B884C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{807E9BB4-62FC-4B8D-86DF-3A30F67B884C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{807E9BB4-62FC-4B8D-86DF-3A30F67B884C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2CD4B0BC-DC34-42A2-89C4-45B4EBD02CB6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2CD4B0BC-DC34-42A2-89C4-45B4EBD02CB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2CD4B0BC-DC34-42A2-89C4-45B4EBD02CB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2CD4B0BC-DC34-42A2-89C4-45B4EBD02CB6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4224163D-CC7B-4CBF-916B-047656E758FF} = {9528FBDE-5BBA-4DE9-AA0D-EA2A806F0567}
@@ -131,5 +137,6 @@ Global
 		{50CDCF14-BDA6-435B-83F5-6D0CABDA2D68} = {695D2EC2-ECCC-4C14-9EFB-0A95726C5D42}
 		{A5DCC661-DC12-481D-B9E2-47EEAB62027F} = {695D2EC2-ECCC-4C14-9EFB-0A95726C5D42}
 		{807E9BB4-62FC-4B8D-86DF-3A30F67B884C} = {695D2EC2-ECCC-4C14-9EFB-0A95726C5D42}
+		{2CD4B0BC-DC34-42A2-89C4-45B4EBD02CB6} = {9528FBDE-5BBA-4DE9-AA0D-EA2A806F0567}
 	EndGlobalSection
 EndGlobal
