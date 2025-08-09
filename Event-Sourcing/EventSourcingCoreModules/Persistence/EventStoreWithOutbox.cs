@@ -160,4 +160,17 @@ public class EventStoreWithOutbox : IEventStoreWithOutbox
         _applicationDbContext.Update(serializedMessage);
         await _applicationDbContext.SaveChangesAsync();
     }
+
+    Task<MessagePayload> GetEventsWithLatestOrderNumber(Guid aggregateId, uint orderNumber)
+    {
+        var serializedMessage = await _applicationDbContext
+            .SerializedPayloadMessage
+            .FirstAsync(x => x.Id == id);
+
+        ++serializedMessage.ExecutionAttempts;
+        serializedMessage.Status = MessageStatus.New;
+
+        _applicationDbContext.Update(serializedMessage);
+        await _applicationDbContext.SaveChangesAsync();
+    }
 }

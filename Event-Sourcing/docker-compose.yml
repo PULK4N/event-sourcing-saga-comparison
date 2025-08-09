@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  redis:
+    image: redis:latest
+    container_name: my-redis
+    ports:
+      - "6379:6379"
+    # (you can add volumes, config, ACLs, etc. here)
+    networks:
+      - redis-network 
+
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    container_name: my-redisinsight
+    ports:
+      - "5540:5540"
+    depends_on:
+      - redis
+    networks:
+      - redis-network 
+    # no extra network config needed—by default both sit on the same network
+    #
+networks:
+  redis-network:

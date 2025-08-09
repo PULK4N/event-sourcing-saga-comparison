@@ -5,7 +5,7 @@ namespace OrderModule.Events;
 
 public class OrderSuccessful : IEvent
 {
-    public object Apply(object stateData, EventExec utionInfo eventExecutionInfo)
+    public object Apply(object stateData, EventExecutionInfo eventExecutionInfo)
     {
         var orderStateData = (OrderStateData)stateData;
         orderStateData.TimeOfOrderPlacement = eventExecutionInfo.Timestamp;

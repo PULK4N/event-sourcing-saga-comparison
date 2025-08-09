@@ -8,8 +8,8 @@ namespace EventSourcing.Core.Interfaces
 
         Task WriteEventsWithOutbox(params EventPayload[] payloads);
         Task<MessagePayload> GetLatestMessage();
+        Task<MessagePayload> GetEventsWithLatestOrderNumber(Guid aggregateId, uint orderNumber);
         Task UpdateCompleted(long id);
-
         Task UpdateFailed(long id);
     }
 }

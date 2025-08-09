@@ -1,6 +1,7 @@
 using EventSourcing.Persistence;
 using EventSourcing.Persistence.Models;
 using EventSourcing.Shared.Models;
+using LinqKit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -22,7 +23,7 @@ namespace EventSourcing.Optimizations
             var redisConnectionString =
                 configuration["ConnectionStrings:redis"]?.ToString() ?? "localhost";
 
-            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect("redisConnectionString");
+            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(redisConnectionString);
             _database = redis.GetDatabase();
         }
 
@@ -59,9 +60,9 @@ namespace EventSourcing.Optimizations
 
             var cachedResults = await _database.StringGetAsync(redisKeys);
 
-            var cachedResultsDeserialized = cachedResults.Select(
-                x => JsonConvert.DeserializeObject<SerializedEventPayload>(x.ToString())
-            );
+            var cachedResultsDeserialized = cachedResults
+                .Where(x => x.HasValue)
+                .Select(x => JsonConvert.DeserializeObject<SerializedEventPayload>(x.ToString()));
 
             var payloads = cachedResultsDeserialized.Select(Deserialize);
 
@@ -81,14 +82,20 @@ namespace EventSourcing.Optimizations
 
             AddMissingAggregateIds(aggregateIdsWithOrderNumber, aggregateIds);
 
+            var predicate = PredicateBuilder.New<SerializedEventPayload>(false);
+
+            foreach (var aggregateWithOrderNumber in aggregateIdsWithOrderNumber)
+            {
+                predicate.Or(
+                    x =>
+                        x.AggregateId == aggregateWithOrderNumber.AggregateId
+                        && x.OrderNumber > aggregateWithOrderNumber.OrderNumber
+                );
+            }
+
             var serializedPayloads = await _applicationDbContext
                 .SerializedEventPayload
-                .Where(
-                    evt =>
-                        aggregateIdsWithOrderNumber.Any(
-                            c => c.AggregateId == evt.AggregateId && evt.OrderNumber > c.OrderNumber
-                        )
-                )
+                .Where(predicate)
                 .AsNoTracking()
                 .ToListAsync();
 

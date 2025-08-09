@@ -22,7 +22,7 @@ public class SeedController : ControllerBase
     // 4. Treba da dodamo iteme u order
     //
 
-    [HttpPost]
+    [HttpGet("seed-objects")]
     public async Task<object> SeedItems([FromServices] StateMachineHandler stateMachineHandler)
     {
         var events = new List<EventPayload>();
